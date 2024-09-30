@@ -1,0 +1,17 @@
+.large-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.large-button > h1 {
+  color: rgb(245, 242, 237);
+  font-size: 1rem;
+  font-weight: bold;
+}
+.large-button > svg {
+  font-size: 3rem;
+  color: white;
+  opacity: 50%;
+}

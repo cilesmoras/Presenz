@@ -1,0 +1,47 @@
+.input-container {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.left {
+  display: flex;
+  gap: 1rem;
+}
+
+.input-select > p {
+  font-size: 11px;
+}
+
+.text-field {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+.text-field > input {
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  outline: none;
+  height: 3rem;
+  min-width: 20rem;
+}
+.text-field > label {
+  position: absolute;
+  left: 8px;
+  line-height: 1;
+  padding: 0px 5px 0px 5px;
+  justify-self: center;
+  background-color: white;
+  font-size: 16px;
+  color: grey;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease-in;
+  cursor: text;
+}
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  transform: translateY(-1.5em) scale(0.8);
+}
+input:focus + label {
+  color: #1a73e8;
+}

@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2  focus:ring-offset-2 sm:w-auto;
+  }
+}
+
+@layer utilities {
+  .bg-indigo {
+    @apply bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500;
+  }
+}
+
+.table-log {
+  width: 600px;
+}
+th {
+  text-align: left;
+}
+
+.hide {
+  display: none;
+}
+
+/* upload_logs css */
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  gap: 2rem;
+}
+.upload {
+  display: flex;
+  gap: 3rem;
+}
+
+.wrapper {
+  border-radius: 5px;
+  border: 1px solid rgb(227, 226, 226);
+  background-color: rgb(253, 253, 253);
+}
+
+.wrapper > input {
+  box-shadow: -3px 6px 12px 0px rgba(179, 179, 179, 0.75);
+  -webkit-box-shadow: -3px 6px 12px 0px rgba(179, 179, 179, 0.75);
+  -moz-box-shadow: -3px 6px 12px 0px rgba(179, 179, 179, 0.75);
+}
+.logs {
+  margin-top: 2rem;
+  border-top: 1px solid #afafaf;
+  padding: 5px;
+}
+.msg {
+  margin-top: 1rem;
+  height: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.box-shadow {
+  box-shadow: 0px 0px 25px -6px rgba(0, 0, 0, 0.86);
+  -webkit-box-shadow: 0px 0px 25px -6px rgba(0, 0, 0, 0.86);
+  -moz-box-shadow: 0px 0px 25px -6px rgba(0, 0, 0, 0.86);
+}

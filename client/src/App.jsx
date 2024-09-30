@@ -1,0 +1,40 @@
+import { Route, Routes } from "react-router-dom";
+import Admin from "./pages/Admin";
+import AttendanceLogs from "./pages/attendance-logs";
+import Dashboard from "./pages/dashboard/index";
+import EmployeesCreate from "./pages/employees/EmployeesCreate";
+import EmployeesProfile from "./pages/employees/EmployeesProfile";
+import Employees from "./pages/employees/index";
+import Login from "./pages/login/index";
+import Settings from "./pages/settings";
+import BreakTime from "./pages/settings/break-time/index";
+import Departments from "./pages/settings/departments";
+import Holidays from "./pages/settings/holidays/index";
+import JobTitles from "./pages/settings/job-titles/index";
+import ShiftSchedules from "./pages/settings/shift-schedules/index";
+import Register from "./pages/login/Register";
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route element={<Admin />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/employees">
+          <Route index element={<Employees />} />
+          <Route path=":idNumber" element={<EmployeesProfile />} />
+          <Route path="create" element={<EmployeesCreate />} />
+        </Route>
+        <Route path="/attendance-logs" element={<AttendanceLogs />} />
+        <Route element={<Settings />}>
+          <Route path="/holidays" element={<Holidays />} />
+          <Route path="/break-time" element={<BreakTime />} />
+          <Route path="/job-titles" element={<JobTitles />} />
+          <Route path="/departments" element={<Departments />} />
+          <Route path="/shift-schedules" element={<ShiftSchedules />} />
+        </Route>
+      </Route>
+      <Route path="*" element={<h1>Page not found</h1>} />
+    </Routes>
+  );
+}
