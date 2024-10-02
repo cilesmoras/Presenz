@@ -2,17 +2,17 @@ import { Route, Routes } from "react-router-dom";
 import Admin from "./pages/Admin";
 import AttendanceLogs from "./pages/attendance-logs";
 import Dashboard from "./pages/dashboard/index";
-import EmployeesCreate from "./pages/employees/EmployeesCreate";
+import EmployeesForm from "./pages/employees/EmployeesForm";
 import EmployeesProfile from "./pages/employees/EmployeesProfile";
 import Employees from "./pages/employees/index";
 import Login from "./pages/login/index";
+import Register from "./pages/login/Register";
 import Settings from "./pages/settings";
 import BreakTime from "./pages/settings/break-time/index";
 import Departments from "./pages/settings/departments";
 import Holidays from "./pages/settings/holidays/index";
 import JobTitles from "./pages/settings/job-titles/index";
 import ShiftSchedules from "./pages/settings/shift-schedules/index";
-import Register from "./pages/login/Register";
 export default function App() {
   return (
     <Routes>
@@ -23,7 +23,8 @@ export default function App() {
         <Route path="/employees">
           <Route index element={<Employees />} />
           <Route path=":idNumber" element={<EmployeesProfile />} />
-          <Route path="create" element={<EmployeesCreate />} />
+          <Route path="create" element={<EmployeesForm />} />
+          <Route path=":id/edit" element={<EmployeesForm />} />
         </Route>
         <Route path="/attendance-logs" element={<AttendanceLogs />} />
         <Route element={<Settings />}>

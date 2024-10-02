@@ -1,13 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import * as z from "zod";
 import "../../components/css/input.css";
 import { Input, Select } from "../../components/inputs";
 import { useNotificationContext } from "../../context/NotificationContext";
+import { fetchJobTitles } from "../../lib/dal/jobTitlesDAL";
+import { jobTitlesForSelectDropdownDTO } from "../../lib/dto/jobTitlesDTO";
 import { createEmployee } from "./EmployeesService";
 
-export default function EmployeesCreate() {
+export default function EmployeesForm() {
+  const { id } = useParams();
+  const isAddMode = !id;
+  const jobTitles = useQuery(["job-titles"], fetchJobTitles);
   const { handleNotification } = useNotificationContext();
   const navigate = useNavigate();
   const userId = 1;
@@ -26,7 +32,6 @@ export default function EmployeesCreate() {
   });
 
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -76,10 +81,10 @@ export default function EmployeesCreate() {
         <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
           <div>
             <h3 className="text-base font-semibold leading-6 text-gray-900">
-              Employee Information
+              {isAddMode ? "Create employee" : "Edit employee"}
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              Use a permanent address where you can recieve mail.
+              Please fill up the required fields.
             </p>
           </div>
           <Controller
@@ -115,7 +120,7 @@ export default function EmployeesCreate() {
                 name="middleName"
                 control={control}
                 render={({ field: { ref, ...rest } }) => (
-                  <Input {...rest} type="text" label="Middle name" />
+                  <Input {...rest} type="text" label="Middle name" optional />
                 )}
               />
             </div>
@@ -134,13 +139,21 @@ export default function EmployeesCreate() {
               />
             </div>
           </div>
-          <Controller
-            name="jobTitle"
-            control={control}
-            render={({ field: { ref, ...rest } }) => (
-              <Select {...rest} label="Job title" options={jobTitle} />
-            )}
-          />
+          {jobTitles.isLoading ? (
+            <p>Loading job titles dropdown...</p>
+          ) : (
+            <Controller
+              name="jobTitle"
+              control={control}
+              render={({ field: { ref, ...rest } }) => (
+                <Select
+                  {...rest}
+                  label="Job title"
+                  options={jobTitlesForSelectDropdownDTO(jobTitles.data)}
+                />
+              )}
+            />
+          )}
           <Controller
             name="department"
             control={control}
