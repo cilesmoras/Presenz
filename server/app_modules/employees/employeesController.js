@@ -6,7 +6,7 @@ const viewTable = "view_employees";
 const userId = 1;
 
 const fetchAll = (request, response) => {
-  const query = `SELECT * FROM ${viewTable}`;
+  const query = `SELECT * FROM ${viewTable} WHERE deleted_at IS NULL ORDER BY first_name, last_name`;
   db.query(query, (error, result) => {
     if (error) {
       console.log(error);
@@ -76,11 +76,8 @@ const updateEmployee = (request, response) => {
     lastName,
   } = request.body;
 
-  console.log(request.body);
-  console.log(id);
   const checkID = "SELECT id_number FROM employees WHERE id = ?";
   db.query(checkID, id, (error, result) => {
-    console.log("result", result);
     if (result.length == 0) {
       return response
         .status(404)
@@ -117,9 +114,37 @@ const updateEmployee = (request, response) => {
   });
 };
 
+const softDeleteEmployee = (request, response) => {
+  const { id } = request.params;
+
+  const checkID = "SELECT id_number FROM employees WHERE id = ?";
+  db.query(checkID, id, (error, result) => {
+    if (result.length == 0) {
+      return response
+        .status(404)
+        .json({ success: false, message: "Employee not found." });
+    }
+
+    const query = `UPDATE ${tableName} SET deleted_at = ? WHERE id = ?`;
+    db.query(query, [new Date(), id], (err, res) => {
+      if (err) {
+        console.log(err);
+        return response
+          .status(500)
+          .json({ success: false, message: "Internal server error." });
+      }
+
+      response
+        .status(200)
+        .json({ success: true, message: "Employee has been deleted." });
+    });
+  });
+};
+
 module.exports = {
   fetchAll,
   fetchByIdNumber,
   createEmployee,
   updateEmployee,
+  softDeleteEmployee,
 };

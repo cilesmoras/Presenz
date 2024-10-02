@@ -40,3 +40,12 @@ export const updateEmployee = async (employeeData, id) => {
     return error.response.data;
   }
 };
+
+export const deleteEmployee = async (id) => {
+  try {
+    const response = await Db.delete(`/employees/${id}/`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

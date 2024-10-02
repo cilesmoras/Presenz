@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as z from "zod";
 import "../../components/css/input.css";
 import { Input, Select } from "../../components/inputs";
+import { Button } from "../../components/ui";
 import { useNotificationContext } from "../../context/NotificationContext";
 import { fetchDepartments } from "../../lib/dal/departmentsDAL";
 import { fetchEmploymentTypes } from "../../lib/dal/employmentTypeDAL";
@@ -81,7 +82,6 @@ export default function EmployeesForm() {
   }, [employee.data, jobTitles.data, employmentTypes.data, departments.data]);
 
   async function onSubmit(data) {
-    console.log(data);
     const result = isAddMode
       ? await createEmployee(data)
       : await updateEmployee(data, employee.data?.id);
@@ -207,12 +207,19 @@ export default function EmployeesForm() {
             />
           )}
         </div>
-        <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+        <div className="flex gap-2 justify-end bg-gray-50 px-4 py-3 text-right sm:px-6">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => navigate(`/employees/${idNumber}`)}
+          >
+            Cancel
+          </Button>
           <button
             type="submit"
             className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            {isSubmitting ? "Saving..." : "Save"}
+            {isSubmitting ? "Saving..." : "Save employee"}
           </button>
         </div>
       </div>

@@ -1,14 +1,12 @@
-export function getDaysInMonth(year, month) {
+export function getDaysInMonth(year, month, range) {
   var date = new Date(year, month, 1);
   var days = [];
   while (date.getMonth() === month) {
     days.push(new Date(date));
     date.setDate(date.getDate() + 1);
   }
-  // const numberOfDaysInMonth = await numberOfDaysInMonth(year, month);
-  // for (let index = 1; index <= numberOfDaysInMonth; index++) {
-  //   days.push(new Date(date));
-  //   date.setUTCDate(date.getUTCDate() + 1);
-  // }
-  return days;
+
+  if (range === 1) return days;
+  if (range === 2) return days.slice(0, 15);
+  if (range === 3) return days.slice(15, 31);
 }

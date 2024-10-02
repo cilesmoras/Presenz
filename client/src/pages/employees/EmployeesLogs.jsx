@@ -1,22 +1,29 @@
 import dayjs from "dayjs";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { fetchLogs } from "../../components/print/DtrServices";
 import Print from "../../components/print/Print";
 import { getDayName, getDaysInMonth } from "../../utils/";
 import { getLogsOfDay } from "../../utils/LogMgr";
 import { Input, Select } from "./../../components/inputs/";
 
-export default function EmployeesLogs() {
-  const employee_id = useParams().idNumber;
+const printOption = [
+  { id: 1, name: "Whole Month" },
+  { id: 2, name: "First Half" },
+  { id: 3, name: "Second Half" },
+];
+
+export default function EmployeesLogs({ idNumber }) {
   const defaultMonth = new Date().getMonth();
   const defaultYear = new Date().getFullYear();
   const [month, setMonth] = useState(defaultMonth);
   const [year, setYear] = useState(defaultYear);
   const [datesInMonth, setDatesInMonth] = useState([]);
+  const [dateToPrint, setDateToPrint] = useState(1);
+
   const selectedDate = new Date(year, month, 1);
   const [empLogs, setEmplogs] = useState([]);
+
   function handleChangeMonth(e) {
     setMonth(e.target.value);
   }
@@ -24,22 +31,32 @@ export default function EmployeesLogs() {
   function handleChangeYear(e) {
     setYear(e.target.value);
   }
+
+  function handleDayToPrint(e) {
+    setDateToPrint(e.target.value);
+  }
+
   const renderLog = (date) => {
     return getLogsOfDay(empLogs, date);
   };
   useEffect(() => {
     const performFetch = async () => {
       setDatesInMonth(
-        getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth())
+        getDaysInMonth(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          Number(dateToPrint)
+        )
       );
-      let logs = await fetchLogs(
-        parseInt(employee_id),
+      const logs = await fetchLogs(
+        parseInt(idNumber),
         dayjs(selectedDate).format("YYYY-MM")
       );
+
       setEmplogs(logs);
     };
     performFetch();
-  }, [month, year]);
+  }, [month, year, dateToPrint]);
 
   return (
     <>
@@ -57,15 +74,14 @@ export default function EmployeesLogs() {
           onChange={handleChangeMonth}
           defaultValue={defaultMonth}
         />
-        <div>
-          <Print
-            empLogs={empLogs}
-            datesInMonth={datesInMonth}
-            employee_id={employee_id}
-            year={year}
-            month={month}
-          />
-        </div>
+        <Select options={printOption} onChange={handleDayToPrint} />
+        <Print
+          empLogs={empLogs}
+          datesInMonth={datesInMonth}
+          employee_id={idNumber}
+          year={year}
+          month={month}
+        />
       </div>
       <div className="flex flex-col">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -120,7 +136,12 @@ export default function EmployeesLogs() {
                             : ""
                         } `}
                       >
-                        <td className="whitespace-nowrap py-2 pl-2  text-left  text-sm text-gray-500 ">
+                        <td
+                          colSpan={`${
+                            dayName === "Sat" || dayName === "Sun" ? "7" : "1"
+                          }`}
+                          className="whitespace-nowrap py-2 pl-2  text-left  text-sm text-gray-500 "
+                        >
                           {`${date.getDate()} - ${dayName}`}
                         </td>
 
@@ -137,7 +158,7 @@ export default function EmployeesLogs() {
                                 key={i}
                                 className="hidden lg:table-cell whitespace-nowrap text-center text-sm text-gray-900"
                               >
-                                {item}
+                                {item ? item : ""}
                               </td>
                             ))}
 
