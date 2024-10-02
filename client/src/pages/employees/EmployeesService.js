@@ -21,7 +21,12 @@ export async function fetchEmployeeByIdNumber(idNumber) {
 }
 
 export const createEmployee = async (employeeData) => {
-  const values = employeeData;
-  const response = await Db.post("/employees/create/add", values);
-  return response;
+  try {
+    const values = employeeData;
+    const response = await Db.post("/employees/create/add", values);
+    console.log("fucking response", response);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
 };

@@ -41,10 +41,6 @@ export default function EmployeesLogs() {
     performFetch();
   }, [month, year]);
 
-  // useEffect(() => {
-  //   console.log("getLogsDay", getLogsOfDay(empLogs, "2023-06-01"));
-  //   console.log("empLogs", empLogs);
-  // }, [empLogs]);
   return (
     <>
       <div

@@ -41,16 +41,23 @@ const createEmployee = (request, response) => {
   const checkID = "SELECT id_number FROM employees WHERE id_number=?";
   db.query(checkID, [request.body.idNumber], (error, result) => {
     if (result.length > 0) {
-      return response.json("0");
+      return response
+        .status(409)
+        .json({ success: false, message: "Employee already exists." });
     }
     const query =
       "INSERT INTO employees (`employment_type_id`,`job_title_id`,`department_id`,`id_number`,`first_name`,`middle_name`,`last_name`,`created_by`) VALUES (?)";
     db.query(query, [values], (err, res) => {
       if (err) {
         console.log(err);
-        return err;
+        return response
+          .status(500)
+          .json({ success: false, message: "Internal server error." });
       }
-      response.send("1");
+
+      response
+        .status(201)
+        .json({ success: true, message: "Employee has been created." });
     });
   });
 };

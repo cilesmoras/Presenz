@@ -7,6 +7,7 @@ export function Input(props) {
     "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm";
   const errorField =
     "block w-full rounded-md border-red-300 pr-10 text-red-900 placeholder-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm";
+
   return (
     <div>
       <div className="flex justify-between">
@@ -50,7 +51,7 @@ export function Input(props) {
       </div>
       {error && (
         <p className="mt-2 text-sm text-red-600" id="email-error">
-          Your password must be less than 4 characters.
+          {error}
         </p>
       )}
     </div>

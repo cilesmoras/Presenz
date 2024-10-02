@@ -1,9 +1,8 @@
 import { Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/20/solid";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { Fragment, useState } from "react";
-import useTimeout from "../hooks/useTimeout";
+import useTimeout from "../../hooks/useTimeout";
 
 export default function Notification({ notification, deleteNotification }) {
   const [show, setShow] = useState(true);
@@ -13,7 +12,7 @@ export default function Notification({ notification, deleteNotification }) {
     setShow(false);
   }
 
-  useTimeout(handleNotification, 3000);
+  useTimeout(handleNotification, 5000);
 
   return (
     <>
@@ -27,27 +26,15 @@ export default function Notification({ notification, deleteNotification }) {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+        <div
+          className={`pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg shadow-lg ring-1 bg-white ring-black ring-opacity-5`}
+        >
           <div className="p-4">
             <div className="flex items-start">
-              <div className="flex-shrink-0">
-                {notification?.type === "success" ? (
-                  <CheckCircleIcon
-                    className="h-6 w-6 text-green-400"
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <XCircleIcon
-                    className="h-6 w-6 text-red-400"
-                    aria-hidden="true"
-                  />
-                )}
-              </div>
+              <div className="flex-shrink-0">{notification?.icon}</div>
               <div className="ml-3 w-0 flex-1 pt-0.5">
                 <p className="text-sm font-medium text-gray-900">
-                  {notification?.type === "success"
-                    ? "Successfully saved!"
-                    : "Somethings' wrong!"}
+                  {notification?.title}
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
                   {notification?.message}
