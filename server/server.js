@@ -18,10 +18,11 @@ app.listen(5000, () => {
 });
 
 const employeesRoutes = require("./app_modules/employees/employeesRoute");
-app.use("/employees", employeesRoutes);
-
 const logsRoutes = require("./app_modules/logs/logsRoute");
-app.use("/logs", logsRoutes);
-
 const userRoutes = require("./app_modules/auth/authRoute");
+const jobTitlesRoutes = require("./app_modules/job-title/jobTitlesRoute");
+
+app.use("/employees", employeesRoutes);
+app.use("/logs", logsRoutes);
 app.use("/auth", userRoutes);
+app.use("/job-title", jobTitlesRoutes);
