@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { forwardRef } from "react";
-import logo from "../../assets/HSAC-icon.png";
-import "./Print.css";
-import { getDayName } from "../../utils";
 import dayjs from "dayjs";
+import React, { forwardRef, useEffect, useState } from "react";
+import logo from "../../assets/HSAC-icon.png";
 import { fetchEmployeeByIdNumber } from "../../pages/employees/EmployeesService";
+import { getDayName } from "../../utils";
 import { monthsName } from "../../utils/months";
 import { comparativeDate } from "./DtrServices";
+import "./Print.css";
 
 const ComponentToPrint = forwardRef((props, ref) => {
   const datesInMonth = props.datesInMonth;
@@ -44,7 +43,7 @@ const ComponentToPrint = forwardRef((props, ref) => {
           <h1>DAILY TIME RECORD</h1>
           <h2>
             {employeeDetails
-              ? `${employeeDetails[0].first_name} ${employeeDetails[0].middle_name} ${employeeDetails[0].last_name}`
+              ? `${employeeDetails.first_name} ${employeeDetails.middle_name} ${employeeDetails.last_name}`
               : ""}
           </h2>
           <span>NAME</span>
@@ -215,7 +214,7 @@ const ComponentToPrint = forwardRef((props, ref) => {
           <h1>DAILY TIME RECORD</h1>
           <h2>
             {employeeDetails
-              ? `${employeeDetails[0].first_name} ${employeeDetails[0].middle_name} ${employeeDetails[0].last_name}`
+              ? `${employeeDetails.first_name} ${employeeDetails.middle_name} ${employeeDetails.last_name}`
               : ""}
           </h2>
           <span>NAME</span>

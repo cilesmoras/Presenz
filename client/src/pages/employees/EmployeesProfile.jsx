@@ -1,42 +1,43 @@
-import { PrinterIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
-import {
-  Button,
-  PageCaption,
-  PageHeading,
-  StatsCard,
-} from "../../components/ui";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, PageCaption, PageHeading } from "../../components/ui";
 import EmployeesDetails from "./EmployeesDetails";
 import EmployeesLogs from "./EmployeesLogs";
 import { fetchEmployeeByIdNumber } from "./EmployeesService";
 
 export default function EmployeesProfile() {
   const { idNumber } = useParams();
-  const { data, isLoading, isError, error } = useQuery(
-    ["employees", idNumber],
+  const { data, isLoading } = useQuery(["employees", idNumber], () =>
     fetchEmployeeByIdNumber(idNumber)
   );
+  const navigate = useNavigate();
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
       <div className="sm:flex sm:items-center mb-6">
         <div className="sm:flex-auto">
-          <PageHeading>{data?.first_name}</PageHeading>
+          <PageHeading>
+            {data.first_name} {data?.middle_name} {data.last_name}
+          </PageHeading>
           <PageCaption>
-            List of all the employees registered in the system.
+            Details, date and time record of the employee
           </PageCaption>
         </div>
         <div className="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-          {/* <Button type="button">Edit</Button>
-          <Button type="button" variant="primary">
+          <Button type="button" onClick={() => navigate(`edit`)}>
+            Edit
+          </Button>
+          {/* <Button type="button" variant="primary">
             <PrinterIcon className="-ml-0.5 mr-2 h-5 w-5" />
             Print DTR
-          </Button>
+          </Button> */}
           <Button type="button" variant="danger">
             <TrashIcon className="-ml-0.5 mr-2 h-5 w-5" />
             Delete
-          </Button> */}
+          </Button>
         </div>
       </div>
       <div className="grid lg:grid-cols-6 gap-6">

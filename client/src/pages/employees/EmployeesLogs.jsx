@@ -57,7 +57,7 @@ export default function EmployeesLogs() {
           onChange={handleChangeMonth}
           defaultValue={defaultMonth}
         />
-        <div style={{ position: "absolute", right: "0" }}>
+        <div>
           <Print
             empLogs={empLogs}
             datesInMonth={datesInMonth}

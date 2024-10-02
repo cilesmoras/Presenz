@@ -1,4 +1,4 @@
-export default function EmployeesDetails(data) {
+export default function EmployeesDetails({ data }) {
   return (
     <div className="overflow-hidden bg-white shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:px-6">
@@ -12,11 +12,17 @@ export default function EmployeesDetails(data) {
       <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
         <dl className="sm:divide-y sm:divide-gray-200">
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Name</dt>
+            <dd className="mt-1 text-right text-sm font-semibold text-gray-900 sm:col-span-2 sm:mt-0">
+              {data.first_name} {data?.middle_name} {data.last_name}
+            </dd>
+          </div>
+          {/* <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Date hired</dt>
             <dd className="mt-1 text-right text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               January 17, 2021
             </dd>
-          </div>
+          </div> */}
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">
               Employment type
@@ -28,7 +34,7 @@ export default function EmployeesDetails(data) {
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Job title</dt>
             <dd className="mt-1 text-right text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              Administrative Officer I
+              {data.job_title}
             </dd>
           </div>
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -36,15 +42,15 @@ export default function EmployeesDetails(data) {
               Division/Department
             </dt>
             <dd className="mt-1 text-right text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              Admin division
+              {data.department_name}
             </dd>
           </div>
-          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+          {/* <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Shift</dt>
             <dd className="mt-1 text-right text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               8:00 am to 12:00 noon - 1:00 pm to 5:00 pm
             </dd>
-          </div>
+          </div> */}
         </dl>
       </div>
     </div>

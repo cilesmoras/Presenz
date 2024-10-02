@@ -14,7 +14,8 @@ export async function fetchEmployees() {
 export async function fetchEmployeeByIdNumber(idNumber) {
   try {
     const response = await fetch(`${API_BASE_URL}/employees/${idNumber}`);
-    return response.json();
+    const result = await response.json();
+    return result[0];
   } catch (error) {
     console.error(error);
   }
