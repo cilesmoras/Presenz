@@ -6,6 +6,7 @@ import * as z from "zod";
 import "../../components/css/input.css";
 import { Input, Select } from "../../components/inputs";
 import { useNotificationContext } from "../../context/NotificationContext";
+import { fetchDepartments } from "../../lib/dal/departmentsDAL";
 import { fetchJobTitles } from "../../lib/dal/jobTitlesDAL";
 import { jobTitlesForSelectDropdownDTO } from "../../lib/dto/jobTitlesDTO";
 import { createEmployee } from "./EmployeesService";
@@ -14,6 +15,7 @@ export default function EmployeesForm() {
   const { id } = useParams();
   const isAddMode = !id;
   const jobTitles = useQuery(["job-titles"], fetchJobTitles);
+  const departments = useQuery(["deparments"], fetchDepartments);
   const { handleNotification } = useNotificationContext();
   const navigate = useNavigate();
   const userId = 1;
@@ -154,13 +156,21 @@ export default function EmployeesForm() {
               )}
             />
           )}
-          <Controller
-            name="department"
-            control={control}
-            render={({ field: { ref, ...rest } }) => (
-              <Select {...rest} label="Department" options={department} />
-            )}
-          />
+          {departments.isLoading ? (
+            <p>Loading departments dropdown...</p>
+          ) : (
+            <Controller
+              name="department"
+              control={control}
+              render={({ field: { ref, ...rest } }) => (
+                <Select
+                  {...rest}
+                  label="Department"
+                  options={departments.data}
+                />
+              )}
+            />
+          )}
           <Controller
             name="employmentType"
             control={control}

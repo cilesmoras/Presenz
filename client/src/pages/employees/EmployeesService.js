@@ -24,7 +24,6 @@ export const createEmployee = async (employeeData) => {
   try {
     const values = employeeData;
     const response = await Db.post("/employees/create/add", values);
-    console.log("fucking response", response);
     return response.data;
   } catch (error) {
     return error.response.data;

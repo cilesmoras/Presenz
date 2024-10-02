@@ -21,8 +21,10 @@ const employeesRoutes = require("./app_modules/employees/employeesRoute");
 const logsRoutes = require("./app_modules/logs/logsRoute");
 const userRoutes = require("./app_modules/auth/authRoute");
 const jobTitlesRoutes = require("./app_modules/job-title/jobTitlesRoute");
+const departmentsRoutes = require("./app_modules/departments/departmentsRoute");
 
 app.use("/employees", employeesRoutes);
 app.use("/logs", logsRoutes);
 app.use("/auth", userRoutes);
 app.use("/job-title", jobTitlesRoutes);
+app.use("/departments", departmentsRoutes);
