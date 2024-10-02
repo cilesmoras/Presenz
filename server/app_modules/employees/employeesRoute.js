@@ -5,6 +5,6 @@ const controller = require("./employeesController");
 router.get("/", controller.fetchAll);
 
 router.get("/:idNumber", controller.fetchByIdNumber);
-
 router.post("/create/add", controller.createEmployee);
+router.patch("/:id/edit", controller.updateEmployee);
 module.exports = router;

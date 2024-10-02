@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,11 +11,18 @@ import { fetchDepartments } from "../../lib/dal/departmentsDAL";
 import { fetchEmploymentTypes } from "../../lib/dal/employmentTypeDAL";
 import { fetchJobTitles } from "../../lib/dal/jobTitlesDAL";
 import { jobTitlesForSelectDropdownDTO } from "../../lib/dto/jobTitlesDTO";
-import { createEmployee } from "./EmployeesService";
+import {
+  createEmployee,
+  fetchEmployeeByIdNumber,
+  updateEmployee,
+} from "./EmployeesService";
 
 export default function EmployeesForm() {
-  const { id } = useParams();
-  const isAddMode = !id;
+  const { idNumber } = useParams();
+  const isAddMode = !idNumber;
+  const employee = useQuery(["employees", idNumber], () =>
+    fetchEmployeeByIdNumber(idNumber)
+  );
   const jobTitles = useQuery(["job-titles"], fetchJobTitles);
   const departments = useQuery(["deparments"], fetchDepartments);
   const employmentTypes = useQuery(["employment-types"], fetchEmploymentTypes);
@@ -38,6 +46,7 @@ export default function EmployeesForm() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
@@ -46,21 +55,46 @@ export default function EmployeesForm() {
       firstName: "",
       middleName: "",
       lastName: "",
-      jobTitle: 1,
-      employmentType: 1,
-      department: 1,
+      jobTitle: undefined,
+      employmentType: undefined,
+      department: undefined,
     },
   });
 
+  useEffect(() => {
+    if (
+      jobTitles.isLoading ||
+      employmentTypes.isLoading ||
+      departments.isLoading
+    )
+      return;
+    reset({
+      idNumber: employee.data?.id_number ?? "",
+      firstName: employee.data?.first_name ?? "",
+      middleName: employee.data?.middle_name ?? "",
+      lastName: employee.data?.last_name ?? "",
+      jobTitle: employee.data?.job_title_id ?? jobTitles.data[0]?.id,
+      employmentType:
+        employee.data?.employment_type_id ?? employmentTypes.data[0]?.id,
+      department: employee.data?.department_id ?? departments.data[0]?.id,
+    });
+  }, [employee.data, jobTitles.data, employmentTypes.data, departments.data]);
+
   async function onSubmit(data) {
-    const result = await createEmployee({ ...data, createdBy: userId });
+    console.log(data);
+    const result = isAddMode
+      ? await createEmployee(data)
+      : await updateEmployee(data, employee.data?.id);
+
     if (!result.success) {
       handleNotification("error", "Something went wrong", result.message);
       return console.error(`submit error: ${result.message}`);
     }
 
     handleNotification("success", "Saved successfully", result.message);
-    navigate("/employees");
+    isAddMode
+      ? navigate("/employees")
+      : navigate(`/employees/${data.idNumber}`);
   }
 
   return (

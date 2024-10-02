@@ -14,7 +14,7 @@ export default function EmployeesDetails({ data }) {
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Name</dt>
             <dd className="mt-1 text-right text-sm font-semibold text-gray-900 sm:col-span-2 sm:mt-0">
-              {data.first_name} {data?.middle_name} {data.last_name}
+              {data?.first_name} {data?.middle_name} {data?.last_name}
             </dd>
           </div>
           {/* <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -28,13 +28,13 @@ export default function EmployeesDetails({ data }) {
               Employment type
             </dt>
             <dd className="mt-1 text-right text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              {data.employment_type_name}
+              {data?.employment_type_name}
             </dd>
           </div>
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Job title</dt>
             <dd className="mt-1 text-right text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              {data.job_title}
+              {data?.job_title}
             </dd>
           </div>
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -42,7 +42,7 @@ export default function EmployeesDetails({ data }) {
               Division/Department
             </dt>
             <dd className="mt-1 text-right text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              {data.department_name}
+              {data?.department_name}
             </dd>
           </div>
           {/* <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">

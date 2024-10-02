@@ -3,6 +3,8 @@ const { db } = require("../mysqlConnection");
 const tableName = "employees";
 const viewTable = "view_employees";
 
+const userId = 1;
+
 const fetchAll = (request, response) => {
   const query = `SELECT * FROM ${viewTable}`;
   db.query(query, (error, result) => {
@@ -35,7 +37,7 @@ const createEmployee = (request, response) => {
     request.body.firstName,
     request.body.midName,
     request.body.lastName,
-    request.body.createdBy,
+    userId,
   ];
 
   const checkID = "SELECT id_number FROM employees WHERE id_number=?";
@@ -62,8 +64,62 @@ const createEmployee = (request, response) => {
   });
 };
 
+const updateEmployee = (request, response) => {
+  const { id } = request.params;
+  const {
+    employmentType,
+    jobTitle,
+    department,
+    idNumber,
+    firstName,
+    midName,
+    lastName,
+  } = request.body;
+
+  console.log(request.body);
+  console.log(id);
+  const checkID = "SELECT id_number FROM employees WHERE id = ?";
+  db.query(checkID, id, (error, result) => {
+    console.log("result", result);
+    if (result.length == 0) {
+      return response
+        .status(404)
+        .json({ success: false, message: "Employee not found." });
+    }
+
+    const query = `UPDATE ${tableName} SET employment_type_id = ?, job_title_id = ?, department_id = ?, id_number = ?, first_name = ?, middle_name = ?,last_name = ?,updated_by = ? WHERE id = ?`;
+    db.query(
+      query,
+      [
+        employmentType,
+        jobTitle,
+        department,
+        idNumber,
+        firstName,
+        midName,
+        lastName,
+        userId,
+        id,
+      ],
+      (err, res) => {
+        if (err) {
+          console.log(err);
+          return response
+            .status(500)
+            .json({ success: false, message: "Internal server error." });
+        }
+
+        response
+          .status(200)
+          .json({ success: true, message: "Employee has been updated." });
+      }
+    );
+  });
+};
+
 module.exports = {
   fetchAll,
   fetchByIdNumber,
   createEmployee,
+  updateEmployee,
 };

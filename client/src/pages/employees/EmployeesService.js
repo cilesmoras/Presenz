@@ -30,3 +30,13 @@ export const createEmployee = async (employeeData) => {
     return error.response.data;
   }
 };
+
+export const updateEmployee = async (employeeData, id) => {
+  try {
+    const values = employeeData;
+    const response = await Db.patch(`/employees/${id}/edit`, values);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

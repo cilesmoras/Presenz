@@ -24,7 +24,7 @@ export default function App() {
           <Route index element={<Employees />} />
           <Route path=":idNumber" element={<EmployeesProfile />} />
           <Route path="create" element={<EmployeesForm />} />
-          <Route path=":id/edit" element={<EmployeesForm />} />
+          <Route path=":idNumber/edit" element={<EmployeesForm />} />
         </Route>
         <Route path="/attendance-logs" element={<AttendanceLogs />} />
         <Route element={<Settings />}>

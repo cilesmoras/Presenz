@@ -8,19 +8,20 @@ import { fetchEmployeeByIdNumber } from "./EmployeesService";
 
 export default function EmployeesProfile() {
   const { idNumber } = useParams();
-  const { data, isLoading } = useQuery(["employees", idNumber], () =>
-    fetchEmployeeByIdNumber(idNumber)
+  const { data, isLoading, isFetching } = useQuery(
+    ["employees", idNumber],
+    () => fetchEmployeeByIdNumber(idNumber)
   );
   const navigate = useNavigate();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading || isFetching) return <p>Loading...</p>;
 
   return (
     <>
       <div className="sm:flex sm:items-center mb-6">
         <div className="sm:flex-auto">
           <PageHeading>
-            {data.first_name} {data?.middle_name} {data.last_name}
+            {data?.first_name} {data?.middle_name} {data?.last_name}
           </PageHeading>
           <PageCaption>
             Details, date and time record of the employee
