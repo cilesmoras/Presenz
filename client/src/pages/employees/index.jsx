@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { Input } from "../../components/inputs";
@@ -7,6 +8,24 @@ import EmployeesTable from "./EmployeesTable";
 
 export default function Employees() {
   const { data, isLoading } = useQuery(["employees"], fetchEmployees);
+  const [employees, setEmployees] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(null);
+
+  useEffect(() => {
+    if (isLoading) return;
+    setEmployees(data);
+  }, [data, isLoading]);
+
+  function handleSearch(query) {
+    if (query.length == 0) {
+      setEmployees(data);
+    }
+    const employeesCopy = data;
+    const found = employeesCopy.filter((emp) =>
+      emp.first_name.toString().toLowerCase().includes(query.toLowerCase())
+    );
+    setEmployees(found);
+  }
 
   return (
     <>
@@ -24,9 +43,13 @@ export default function Employees() {
         </div>
       </div>
       <div className="max-w-[20rem] mb-4">
-        <Input type="search" placeholder="Search here" />
+        <Input
+          type="search"
+          placeholder="Search here"
+          onChange={(e) => handleSearch(e.target.value)}
+        />
       </div>
-      {isLoading ? <p>Loading...</p> : <EmployeesTable employees={data} />}
+      {isLoading ? <p>Loading...</p> : <EmployeesTable employees={employees} />}
     </>
   );
 }
