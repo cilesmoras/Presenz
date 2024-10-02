@@ -7,6 +7,7 @@ import "../../components/css/input.css";
 import { Input, Select } from "../../components/inputs";
 import { useNotificationContext } from "../../context/NotificationContext";
 import { fetchDepartments } from "../../lib/dal/departmentsDAL";
+import { fetchEmploymentTypes } from "../../lib/dal/employmentTypeDAL";
 import { fetchJobTitles } from "../../lib/dal/jobTitlesDAL";
 import { jobTitlesForSelectDropdownDTO } from "../../lib/dto/jobTitlesDTO";
 import { createEmployee } from "./EmployeesService";
@@ -16,6 +17,7 @@ export default function EmployeesForm() {
   const isAddMode = !id;
   const jobTitles = useQuery(["job-titles"], fetchJobTitles);
   const departments = useQuery(["deparments"], fetchDepartments);
+  const employmentTypes = useQuery(["employment-types"], fetchEmploymentTypes);
   const { handleNotification } = useNotificationContext();
   const navigate = useNavigate();
   const userId = 1;
@@ -49,22 +51,6 @@ export default function EmployeesForm() {
       department: 1,
     },
   });
-
-  const jobTitle = [
-    { id: "1", name: "Administrative Officer I" },
-    { id: "2", name: "Sheriff I" },
-  ];
-
-  const department = [
-    { id: "1", name: "Admin Division" },
-    { id: "2", name: "Legal Division" },
-  ];
-
-  const employmentType = [
-    { id: "1", name: "Permanent" },
-    { id: "2", name: "Contractual" },
-    { id: "3", name: "Job Order" },
-  ];
 
   async function onSubmit(data) {
     const result = await createEmployee({ ...data, createdBy: userId });
@@ -171,17 +157,21 @@ export default function EmployeesForm() {
               )}
             />
           )}
-          <Controller
-            name="employmentType"
-            control={control}
-            render={({ field: { ref, ...rest } }) => (
-              <Select
-                {...rest}
-                label="Employment type"
-                options={employmentType}
-              />
-            )}
-          />
+          {employmentTypes.isLoading ? (
+            <p>Loading employment types dropdown...</p>
+          ) : (
+            <Controller
+              name="employmentType"
+              control={control}
+              render={({ field: { ref, ...rest } }) => (
+                <Select
+                  {...rest}
+                  label="Employment type"
+                  options={employmentTypes.data}
+                />
+              )}
+            />
+          )}
         </div>
         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
           <button
