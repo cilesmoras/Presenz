@@ -1,11 +1,15 @@
 import dayjs from "dayjs";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { fetchLogs } from "../../components/print/DtrServices";
 import Print from "../../components/print/Print";
+import Drawer from "../../components/ui/Drawer";
 import { getDayName, getDaysInMonth } from "../../utils/";
 import { getLogsOfDay } from "../../utils/LogMgr";
 import { Input, Select } from "./../../components/inputs/";
+import DtrLogsForm from "./DtrLogsForm";
+import ViewLogsOfDayList from "./ViewLogsOfDay";
 
 const printOption = [
   { id: 1, name: "Whole Month" },
@@ -13,16 +17,31 @@ const printOption = [
   { id: 3, name: "Second Half" },
 ];
 
-export default function EmployeesLogs({ idNumber }) {
+export default function EmployeesLogs({ employee, idNumber }) {
   const defaultMonth = new Date().getMonth();
   const defaultYear = new Date().getFullYear();
   const [month, setMonth] = useState(defaultMonth);
   const [year, setYear] = useState(defaultYear);
   const [datesInMonth, setDatesInMonth] = useState([]);
   const [dateToPrint, setDateToPrint] = useState(1);
-
   const selectedDate = new Date(year, month, 1);
   const [empLogs, setEmplogs] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedViewLogsDate, setSelectedViewLogsDate] = useState("");
+  const [selectedEditLog, setSelectedEditLog] = useState(null);
+  const [logsOfSelectedDate, setLogsOfSelectedDate] = useState([]);
+  const employeeLogs = useQuery(
+    [
+      "employee-logs",
+      employee.id_number,
+      dayjs(selectedDate).format("YYYY-MM"),
+    ],
+    () =>
+      fetchLogs(
+        parseInt(employee.id_number),
+        dayjs(selectedDate).format("YYYY-MM")
+      )
+  );
 
   function handleChangeMonth(e) {
     setMonth(e.target.value);
@@ -36,27 +55,64 @@ export default function EmployeesLogs({ idNumber }) {
     setDateToPrint(e.target.value);
   }
 
-  const renderLog = (date) => {
-    return getLogsOfDay(empLogs, date);
-  };
   useEffect(() => {
-    const performFetch = async () => {
-      setDatesInMonth(
-        getDaysInMonth(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          Number(dateToPrint)
-        )
-      );
-      const logs = await fetchLogs(
-        parseInt(idNumber),
-        dayjs(selectedDate).format("YYYY-MM")
-      );
+    if (employeeLogs.isLoading) return;
+    setEmplogs(employeeLogs.data);
+  }, [employeeLogs.data, employeeLogs.isLoading]);
 
-      setEmplogs(logs);
-    };
-    performFetch();
+  useEffect(() => {
+    setDatesInMonth(
+      getDaysInMonth(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        Number(dateToPrint)
+      )
+    );
   }, [month, year, dateToPrint]);
+
+  function handleClickViewLogs(date) {
+    setSelectedEditLog(null);
+    setSelectedViewLogsDate(date);
+    setDrawerOpen(true);
+  }
+
+  // get niya tanang logs anang adlawa
+  // apil natong wala ning appear sa dtr
+  useEffect(() => {
+    if (!selectedViewLogsDate) return;
+    const logs = empLogs.filter(
+      (item) =>
+        moment(item.log_time).format("YYYY-MM-DD") ===
+        moment(selectedViewLogsDate).format("YYYY-MM-DD")
+    );
+    setLogsOfSelectedDate(logs);
+  }, [selectedViewLogsDate, empLogs]);
+
+  function handleEditLog(data) {
+    setSelectedEditLog(data);
+  }
+
+  function handleDeleteLog(data) {
+    console.log("delete", data);
+  }
+
+  const drawerContent = (
+    <>
+      <div className="pb-4">
+        <DtrLogsForm
+          logData={selectedEditLog}
+          setLogData={setSelectedEditLog}
+          employee={employee}
+          selectedDate={selectedViewLogsDate}
+        />
+      </div>
+      <ViewLogsOfDayList
+        handleEdit={handleEditLog}
+        handleDelete={handleDeleteLog}
+        logs={logsOfSelectedDate}
+      />
+    </>
+  );
 
   return (
     <>
@@ -78,7 +134,7 @@ export default function EmployeesLogs({ idNumber }) {
         <Print
           empLogs={empLogs}
           datesInMonth={datesInMonth}
-          employee_id={idNumber}
+          employee_id={employee.id_number}
           year={year}
           month={month}
         />
@@ -171,6 +227,7 @@ export default function EmployeesLogs({ idNumber }) {
                             <a
                               href="#"
                               className="text-indigo-600 hover:text-indigo-900 pr-6"
+                              onClick={() => handleClickViewLogs(date)}
                             >
                               View logs
                             </a>
@@ -185,6 +242,12 @@ export default function EmployeesLogs({ idNumber }) {
           </div>
         </div>
       </div>
+      <Drawer
+        open={drawerOpen}
+        setOpen={setDrawerOpen}
+        title={`Logs - ${dayjs(selectedViewLogsDate).format("MMMM DD, YYYY")}`}
+        content={drawerContent}
+      />
     </>
   );
 }
@@ -202,37 +265,4 @@ const months = [
   { id: 9, name: "October" },
   { id: 10, name: "November" },
   { id: 11, name: "December" },
-];
-
-const transactions = [
-  {
-    id: crypto.randomUUID(),
-    day: "1",
-    morningIn: "08:00",
-    morningOut: "12:01",
-    afternoonIn: "12:47",
-    afternoonOut: "17:06",
-    undertime: "17:06",
-    totalWorkingHours: "08:06",
-  },
-  {
-    id: crypto.randomUUID(),
-    day: "2",
-    morningIn: "07:57",
-    morningOut: "12:02",
-    afternoonIn: "12:59",
-    afternoonOut: "17:03",
-    undertime: "17:06",
-    totalWorkingHours: "08:06",
-  },
-  {
-    id: crypto.randomUUID(),
-    day: "3",
-    morningIn: "07:58",
-    morningOut: "12:05",
-    afternoonIn: "12:36",
-    afternoonOut: "17:14",
-    undertime: "17:06",
-    totalWorkingHours: "08:16",
-  },
 ];

@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Db } from "../utils/ConnectMethod";
 import { Button, PageHeading } from "./ui";
 
@@ -16,8 +15,6 @@ const Upload_logs = () => {
         punchType: log[3],
         attendanceType: log[4],
         logTime: log[1],
-        userId: userId,
-        updateBy: userId,
         // afternoonout: log[5]?.replace("\r", ""),
       };
     });

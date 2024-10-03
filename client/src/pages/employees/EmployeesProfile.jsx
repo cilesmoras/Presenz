@@ -69,7 +69,7 @@ export default function EmployeesProfile() {
       <div className="grid lg:grid-cols-6 gap-6">
         <div className="lg:col-span-4">
           <div>
-            <EmployeesLogs idNumber={idNumber} />
+            <EmployeesLogs employee={data} idNumber={idNumber} />
             {/* <StatsCard data={stats} /> */}
           </div>
         </div>
