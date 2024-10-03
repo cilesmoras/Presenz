@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Db } from "../utils/ConnectMethod";
 import { Button, PageHeading } from "./ui";
 
@@ -9,13 +9,12 @@ const Upload_logs = () => {
   const [msg, setMsg] = useState("No file to upload");
   const cleanup = (logs) => {
     let newlogs = logs?.map((log) => {
+      if (!log) return;
       return {
         id: log[0]?.trim(),
-        // morningin: log[2],
+        logTime: log[1],
         punchType: log[3],
         attendanceType: log[4],
-        logTime: log[1],
-        // afternoonout: log[5]?.replace("\r", ""),
       };
     });
     return newlogs;
@@ -45,14 +44,22 @@ const Upload_logs = () => {
       const reader = new FileReader();
       reader.onload = async (e) => {
         const text = e.target.result;
-        const array = text.split("\n").map((line) => {
-          return line.split("\t");
-        });
+        const array = text
+          .split("\n")
+          .filter((line) => line)
+          .map((line) => {
+            return line.split("\t");
+          });
+
         setLogs(cleanup(array));
       };
       reader.readAsText(e.target.files[0]);
     }
   };
+
+  useEffect(() => {
+    console.log("logs", logs);
+  }, [logs]);
 
   const punchType = (e) => {
     switch (e) {
