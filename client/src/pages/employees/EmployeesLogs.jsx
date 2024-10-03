@@ -1,10 +1,12 @@
 import dayjs from "dayjs";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { fetchLogs } from "../../components/print/DtrServices";
 import Print from "../../components/print/Print";
 import Drawer from "../../components/ui/Drawer";
+import { useNotificationContext } from "../../context/NotificationContext";
+import { deleteAttendanceLog } from "../../lib/dal/attendanceLogsDAL";
 import { getDayName, getDaysInMonth } from "../../utils/";
 import { getLogsOfDay } from "../../utils/LogMgr";
 import { Input, Select } from "./../../components/inputs/";
@@ -18,6 +20,8 @@ const printOption = [
 ];
 
 export default function EmployeesLogs({ employee, idNumber }) {
+  const queryClient = useQueryClient();
+  const { handleNotification } = useNotificationContext();
   const defaultMonth = new Date().getMonth();
   const defaultYear = new Date().getFullYear();
   const [month, setMonth] = useState(defaultMonth);
@@ -70,12 +74,6 @@ export default function EmployeesLogs({ employee, idNumber }) {
     );
   }, [month, year, dateToPrint]);
 
-  function handleClickViewLogs(date) {
-    setSelectedEditLog(null);
-    setSelectedViewLogsDate(date);
-    setDrawerOpen(true);
-  }
-
   // get niya tanang logs anang adlawa
   // apil natong wala ning appear sa dtr
   useEffect(() => {
@@ -88,12 +86,33 @@ export default function EmployeesLogs({ employee, idNumber }) {
     setLogsOfSelectedDate(logs);
   }, [selectedViewLogsDate, empLogs]);
 
+  function handleClickViewLogs(date) {
+    setSelectedEditLog(null);
+    setSelectedViewLogsDate(date);
+    setDrawerOpen(true);
+  }
+
   function handleEditLog(data) {
     setSelectedEditLog(data);
   }
 
-  function handleDeleteLog(data) {
-    console.log("delete", data);
+  async function handleDeleteLog(data) {
+    try {
+      const logId = data.id;
+      const result = await deleteAttendanceLog(logId);
+      if (!result.success) {
+        handleNotification("error", "Something went wrong.", result.message);
+        return;
+      }
+
+      queryClient.invalidateQueries([
+        "employee-logs",
+        employee.id_number,
+        dayjs(selectedViewLogsDate).format("YYYY-MM"),
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const drawerContent = (

@@ -8,3 +8,12 @@ export async function insertAttendanceLog(data) {
     return error.response.data.message;
   }
 }
+
+export async function deleteAttendanceLog(logId) {
+  try {
+    const response = await Db.delete(`/logs/${logId}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data.message;
+  }
+}
