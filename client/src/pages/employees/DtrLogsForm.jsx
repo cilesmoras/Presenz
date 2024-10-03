@@ -16,6 +16,7 @@ export default function DtrLogsForm({
   logData,
   setLogData,
   selectedDate,
+  setDrawerOpen,
 }) {
   const isAddMode = !logData;
   const [error, setError] = useState("");
@@ -25,8 +26,6 @@ export default function DtrLogsForm({
     logTime: z.string().trim().min(1, { message: "Please select a time." }),
     punchType: z.coerce.number(),
   });
-
-  console.log(logData);
 
   const {
     control,
@@ -40,6 +39,11 @@ export default function DtrLogsForm({
       punchType: isAddMode ? punchType[0].id : logData?.punch_type,
     },
   });
+
+  function handleCancel() {
+    if (isAddMode) setDrawerOpen(false);
+    else setLogData(null);
+  }
 
   useEffect(() => {
     reset({
@@ -113,11 +117,7 @@ export default function DtrLogsForm({
           </p>
         )}
         <div className="flex justify-end gap-3 items-stretch">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => setLogData(null)}
-          >
+          <Button type="button" variant="secondary" onClick={handleCancel}>
             Cancel
           </Button>
           <Button type="submit" variant={isAddMode ? "primary" : "success"}>

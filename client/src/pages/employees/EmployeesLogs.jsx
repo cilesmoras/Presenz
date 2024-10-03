@@ -126,6 +126,7 @@ export default function EmployeesLogs({ employee, idNumber }) {
           setLogData={setSelectedEditLog}
           employee={employee}
           selectedDate={selectedViewLogsDate}
+          setDrawerOpen={setDrawerOpen}
         />
       </div>
       <ViewLogsOfDayList
