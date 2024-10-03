@@ -247,13 +247,12 @@ export default function EmployeesLogs({ employee, idNumber }) {
                           {dayName === "Sat" || dayName === "Sun" ? (
                             ""
                           ) : (
-                            <a
-                              href="#"
-                              className="text-indigo-600 hover:text-indigo-900 pr-6"
+                            <span
+                              className="text-indigo-600 hover:text-indigo-900 pr-6 cursor-pointer"
                               onClick={() => handleClickViewLogs(date)}
                             >
                               View logs
-                            </a>
+                            </span>
                           )}
                         </td>
                       </tr>
