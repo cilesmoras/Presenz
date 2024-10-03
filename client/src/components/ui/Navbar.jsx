@@ -6,7 +6,7 @@ import presenzIcon from "../../assets/presenz.ico";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", current: true },
-  { name: "Attendance logs", href: "/attendance-logs", current: false },
+  { name: "Upload logs", href: "/attendance-logs", current: false },
   { name: "Employees", href: "/employees", current: false },
   { name: "Settings", href: "/holidays", current: false },
 ];
