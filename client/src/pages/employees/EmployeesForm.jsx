@@ -211,7 +211,9 @@ export default function EmployeesForm() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => navigate(`/employees/${idNumber}`)}
+            onClick={() =>
+              navigate(isAddMode ? `/employees/` : `/employees/${idNumber}`)
+            }
           >
             Cancel
           </Button>

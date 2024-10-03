@@ -24,7 +24,7 @@ export default function ViewLogsOfDayList({ logs, handleEdit, handleDelete }) {
           <div className="min-w-0">
             <div className="flex items-start gap-x-3">
               <p className="text-sm font-semibold leading-6 text-gray-900">
-                {dayjs(log.log_time).format("HH:mm")}
+                {dayjs(log.log_time).format("hh:mm:ss A")}
               </p>
               <p
                 className={classNames(
