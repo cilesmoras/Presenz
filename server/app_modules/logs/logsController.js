@@ -37,6 +37,25 @@ const insertLogs = (request, response) => {
   });
 };
 
+const updateLog = (request, response) => {
+  const { logId } = request.params;
+  const { punchType, logTime } = request.body;
+
+  const query = `UPDATE ${tableName} SET punch_type = ?, log_time = ?, updated_by = ? WHERE id = ?`;
+  db.query(query, [punchType, logTime, userId, logId], (err, data) => {
+    if (err) {
+      console.error(err);
+      return response
+        .status(500)
+        .json({ success: false, message: "Internal server error." });
+    }
+
+    return response
+      .status(200)
+      .json({ success: true, message: "Log has been updated." });
+  });
+};
+
 function deleteLog(request, response) {
   const { logId } = request.params;
 
@@ -58,5 +77,6 @@ function deleteLog(request, response) {
 module.exports = {
   getLogs,
   insertLogs,
+  updateLog,
   deleteLog,
 };

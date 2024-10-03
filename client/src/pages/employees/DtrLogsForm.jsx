@@ -1,12 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
 import { z } from "zod";
 import { Input, Select } from "../../components/inputs";
 import { Button } from "../../components/ui";
-import { insertAttendanceLog } from "../../lib/dal/attendanceLogsDAL";
+import {
+  insertAttendanceLog,
+  updateAttendanceLog,
+} from "../../lib/dal/attendanceLogsDAL";
 
 export default function DtrLogsForm({
   employee,
@@ -23,18 +26,27 @@ export default function DtrLogsForm({
     punchType: z.coerce.number(),
   });
 
+  console.log(logData);
+
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      logTime: "",
-      punchType: punchType[0].id,
+      logTime: isAddMode ? "" : dayjs(logData?.log_time).format("HH:mm:ss"),
+      punchType: isAddMode ? punchType[0].id : logData?.punch_type,
     },
   });
+
+  useEffect(() => {
+    reset({
+      logTime: isAddMode ? "" : dayjs(logData?.log_time).format("HH:mm:ss"),
+      punchType: isAddMode ? punchType[0].id : logData?.punch_type,
+    });
+  }, [logData]);
 
   async function onSubmit(data) {
     try {
@@ -48,12 +60,16 @@ export default function DtrLogsForm({
         attendanceType,
         logTime,
       };
-      console.log(log);
-      const result = await insertAttendanceLog(log);
+
+      const result = isAddMode
+        ? await insertAttendanceLog(log)
+        : await updateAttendanceLog(log, logData?.id);
       if (!result.success) {
-        setError("Failed to insert log.");
+        setError("Failed to process the attendance log.");
         return;
       }
+
+      if (!isAddMode) setLogData(null);
 
       reset();
       queryClient.invalidateQueries([
