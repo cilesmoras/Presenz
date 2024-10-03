@@ -1,17 +1,36 @@
+import { DocumentIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
-import { Db } from "../utils/ConnectMethod";
-import { Button, PageHeading } from "./ui";
+import { useNotificationContext } from "../context/NotificationContext";
+import { insertBatchAttendanceLog } from "../lib/dal/attendanceLogsDAL";
+import SpinnerIcon from "./ui/SpinnerIcon";
 
 const Upload_logs = () => {
   const [color, setColor] = useState("black");
   const userId = 1;
   const [logs, setLogs] = useState([]);
   const [msg, setMsg] = useState("No file to upload");
+  const [fileName, setFileName] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const { handleNotification } = useNotificationContext();
+
+  // const {
+  //   control,
+  //   handleSubmit,
+  //   reset,
+  //   formState: { errors },
+  // } = useForm({
+  //   resolver: zodResolver(schema),
+  //   defaultValues: {
+  //     logTime: isAddMode ? "" : dayjs(logData?.log_time).format("HH:mm:ss"),
+  //     punchType: isAddMode ? punchType[0].id : logData?.punch_type,
+  //   },
+  // });
+
   const cleanup = (logs) => {
     let newlogs = logs?.map((log) => {
       if (!log) return;
       return {
-        id: log[0]?.trim(),
+        employeeIdNumber: log[0]?.trim(),
         logTime: log[1],
         punchType: log[3],
         attendanceType: log[4],
@@ -21,40 +40,52 @@ const Upload_logs = () => {
   };
 
   const handleUploadLogs = async () => {
-    if (logs.length) {
-      setMsg("Uploading please wait......");
-      try {
-        const response = await Db.post("/logs/insertlogs", logs);
-        setMsg(response.data);
-        setLogs((log) => {
-          (log.id = ""), (log.punchType = ""), (log.logTime = "");
-        });
-        setColor("green");
-        setMsg("Upload Successfull!");
-      } catch (error) {
-        console.log(error);
+    if (logs.length == 0) return;
+    try {
+      setIsUploading(true);
+      // const response = await insertAttendanceLog(logs);
+      const response = await insertBatchAttendanceLog(logs);
+      if (!response.success) {
+        handleNotification(
+          "error",
+          "Something went wrong.",
+          "Failed to upload the file."
+        );
+        return;
       }
-    } else {
-      setMsg("Choose file first!");
+
+      handleNotification("success", "Hurray!", "File successfully uploaded.");
+      setLogs([]);
+      setFileName(null);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsUploading(false);
     }
   };
   const showFile = async (e) => {
     e.preventDefault();
+    console.log("e.target.result", e.target.result);
     if (e.target.result == null) {
+      setFileName(e.target.files[0].name);
       const reader = new FileReader();
+      console.log(reader);
       reader.onload = async (e) => {
         const text = e.target.result;
         const array = text
           .split("\n")
-          .filter((line) => line)
+          .filter((line) => line.trim().length > 0)
           .map((line) => {
             return line.split("\t");
           });
 
+        console.log("array", array);
         setLogs(cleanup(array));
       };
       reader.readAsText(e.target.files[0]);
     }
+
+    e.target.value = null;
   };
 
   useEffect(() => {
@@ -77,7 +108,61 @@ const Upload_logs = () => {
   };
   return (
     <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
-      <div className="overflow-hidden rounded-lg bg-white shadow">
+      <div className="col-span-full">
+        <label
+          htmlFor="cover-photo"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          DTR file here
+        </label>
+        <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+          <div className="text-center">
+            <div className="text-center leading-6 text-gray-600">
+              <label
+                htmlFor="file-upload"
+                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+              >
+                <DocumentIcon
+                  aria-hidden="true"
+                  className="mx-auto h-12 w-12 mb-4 text-gray-300 hover:text-indigo-600"
+                />
+                <span>Upload a file</span>
+                <input
+                  onChange={(e) => showFile(e)}
+                  id="file-upload"
+                  name="file-upload"
+                  type="file"
+                  className="sr-only"
+                  accept=".dat"
+                />
+              </label>
+            </div>
+            <p className="text-xs leading-5 mt-1 text-gray-600">
+              .dat file biometric machine
+            </p>
+            <p className="mt-3">{fileName}</p>
+          </div>
+        </div>
+      </div>
+      {logs.length > 0 && (
+        <button
+          type="button"
+          disabled={isUploading}
+          onClick={handleUploadLogs}
+          className="w-full rounded-md mt-4 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          {isUploading ? (
+            <>
+              <SpinnerIcon /> Uploading...
+            </>
+          ) : (
+            "Begin upload"
+          )}
+        </button>
+      )}
+      <br />
+      <br />
+      {/* <div className="overflow-hidden rounded-lg bg-white shadow">
         <div className="upload">
           <PageHeading>Upload logs</PageHeading>
           <input
@@ -123,7 +208,7 @@ const Upload_logs = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

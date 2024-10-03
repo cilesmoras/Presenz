@@ -4,8 +4,9 @@ const tableName = "attendance_logs";
 const userId = 1;
 //get logs by month
 const getLogs = (request, response) => {
-  const employeeId = request.body.employeeId;
-  const date = request.body.date;
+  const { employeeId, date } = request.params;
+  // const employeeId = request.body.employeeId;
+  // const date = request.body.date;
   const query = `SELECT id,employees_id,punch_type,log_time FROM ${tableName} where employees_id = ? and DATE_FORMAT(log_time,'%Y-%m') = ?`;
   db.query(query, [employeeId, date], (err, data) => {
     if (err) return response.json(err);
@@ -14,6 +15,7 @@ const getLogs = (request, response) => {
 };
 
 const insertLogs = (request, response) => {
+  // const {employeeIdNumber, punchType, attendanceType, logTime} = request.body
   const values = [
     request.body.employeeIdNumber,
     request.body.punchType,
@@ -24,6 +26,36 @@ const insertLogs = (request, response) => {
 
   const query = `INSERT INTO ${tableName} (employees_id, punch_type, attendance_type_id, log_time, created_by) VALUES (?)`;
   db.query(query, [values], (err, data) => {
+    if (err) {
+      console.error(err);
+      return response
+        .status(500)
+        .json({ success: false, message: "Internal server error." });
+    }
+
+    return response
+      .status(200)
+      .json({ success: true, message: "Logs has been added." });
+  });
+};
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const batchInsertLogs = async (request, response) => {
+  const batchValues = request.body.map((value) => [
+    value.employeeIdNumber,
+    value.punchType,
+    value.attendanceType,
+    value.logTime,
+    userId,
+  ]);
+
+  await sleep(2000);
+
+  const query = `INSERT INTO ${tableName} (employees_id, punch_type, attendance_type_id, log_time, created_by) VALUES ?`;
+  db.query(query, [batchValues], (err, data) => {
     if (err) {
       console.error(err);
       return response
@@ -77,6 +109,7 @@ function deleteLog(request, response) {
 module.exports = {
   getLogs,
   insertLogs,
+  batchInsertLogs,
   updateLog,
   deleteLog,
 };

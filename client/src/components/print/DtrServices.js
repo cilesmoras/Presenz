@@ -1,5 +1,5 @@
-import { Db } from "../../utils/ConnectMethod";
 import moment from "moment";
+import { Db } from "../../utils/ConnectMethod";
 
 export const comparativeDate = (mydate, startNum, endNum) => {
   let timeAsNumber = Number(moment(mydate).format("HHmmss"));
@@ -9,7 +9,7 @@ export const comparativeDate = (mydate, startNum, endNum) => {
 export const fetchLogs = async (employeeId, date) => {
   const values = { employeeId: employeeId, date: date };
   try {
-    const employeeLogs = await Db.post("/logs/employeelogs", values);
+    const employeeLogs = await Db.get(`/logs/${employeeId}/${date}`);
     return employeeLogs.data;
   } catch (error) {
     console.log(error);

@@ -9,6 +9,16 @@ export async function insertAttendanceLog(data) {
   }
 }
 
+export async function insertBatchAttendanceLog(data) {
+  try {
+    const response = await Db.post("/logs/batchInserts", data);
+    return response.data;
+    return;
+  } catch (error) {
+    return error.response.data.message;
+  }
+}
+
 export async function updateAttendanceLog(data, logId) {
   try {
     const response = await Db.patch(`/logs/${logId}`, data);
