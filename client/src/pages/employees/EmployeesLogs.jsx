@@ -83,7 +83,10 @@ export default function EmployeesLogs({ employee, idNumber }) {
         moment(item.log_time).format("YYYY-MM-DD") ===
         moment(selectedViewLogsDate).format("YYYY-MM-DD")
     );
-    setLogsOfSelectedDate(logs);
+    const sortedLogs = logs.sort(
+      (a, b) => new Date(a.log_time) - new Date(b.log_time)
+    );
+    setLogsOfSelectedDate(sortedLogs);
   }, [selectedViewLogsDate, empLogs]);
 
   function handleClickViewLogs(date) {
@@ -126,9 +129,9 @@ export default function EmployeesLogs({ employee, idNumber }) {
         />
       </div>
       <ViewLogsOfDayList
+        logs={logsOfSelectedDate}
         handleEdit={handleEditLog}
         handleDelete={handleDeleteLog}
-        logs={logsOfSelectedDate}
       />
     </>
   );
