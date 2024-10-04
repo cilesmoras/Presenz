@@ -5,7 +5,7 @@
 .dtr-container {
   font-size: small;
   font-family: Arial, Helvetica, sans-serif;
-  margin: 10px;
+  /* margin: 5px; */
   width: 370px;
 }
 .logo-container {
@@ -32,6 +32,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .title-name > h1 {
   font-weight: bold;
   font-size: 15px;
@@ -67,33 +68,31 @@
 }
 .dtr-table {
   margin-top: 5px;
+  font-size: 11px;
+  width: 100%;
+  border: 1px solid #e5e7eb;
 }
 .dtr-table > thead > tr > th {
   text-align: center;
-  border: 1px solid grey;
-}
-.dtr-table > thead > tr > th:nth-child(1) {
-  padding: 5px;
-}
-.dtr-table > thead > tr:nth-child(2) > th {
-  text-align: center;
-  border: 1px solid grey;
-  padding: 5px;
-  width: 4rem;
+  border: 1px solid #e5e7eb;
+  background-color: #e5e7eb;
 }
 
 .dtr-table > tbody > tr > td {
-  border: 1px solid grey;
+  /* border-bottom: 1px solid #e5e7eb; */
   text-align: center;
   font-size: 11px;
+  padding: 2px 5px;
 }
 
-.dtr-table > tbody > tr {
-  border: 1px solid grey;
+.dtr-table > tbody > tr:nth-child(even) {
+  background-color: #f3f4f6;
+  /* border: 1px solid grey;
   width: 3.6rem;
   text-align: center;
-  font-size: 10px;
+  font-size: 10px; */
 }
+
 .log-time > td {
   border: 1px solid grey;
 }

@@ -9,6 +9,9 @@ import "./Print.css";
 
 const IN_CHARGE = import.meta.env.VITE_IN_CHARGE;
 
+const thead1 = ["Day", "Morning", "Afternoon", "Undertime"];
+const thead2 = ["IN", "OUT", "IN", "OUT", "Hrs:Min"];
+
 export default function DtrTemplate({ data }) {
   const datesInMonth = data.datesInMonth;
   const employee_id = data.employee_id;
@@ -25,8 +28,9 @@ export default function DtrTemplate({ data }) {
   }, []);
 
   return (
-    <div className="dtr-container">
-      <p>CSC FORM NO. 48</p>
+    // <div className="dtr-container">
+    <div className="m-3 px-4">
+      <p className="text-[11px]">CSC FORM NO. 48</p>
       <div className="logo-container">
         <div className="logo">
           <img src={logo} alt="" />
@@ -39,43 +43,39 @@ export default function DtrTemplate({ data }) {
           <label>Regional Adjudication Branch 9</label>
         </div>
       </div>
-      <div className="title-name">
-        <h1>DAILY TIME RECORD</h1>
-        <h2 className="italic">
+      <div className="flex flex-col justify-center">
+        <h1 className="text-sm leading-6 text-center my-2">
+          DAILY TIME RECORD
+        </h1>
+        <h2 className="font-bold text-[12px] uppercase mx-4 border-gray-300 border-b-[1px] text-center">
           {employeeDetails
-            ? `${employeeDetails.first_name} ${employeeDetails.middle_name} ${employeeDetails.last_name}`
+            ? `${employeeDetails.first_name} ${
+                employeeDetails.middle_name ?? ""
+              } ${employeeDetails.last_name}`
             : ""}
         </h2>
-        <span>NAME</span>
+        <p className="text-center text-xs mb-2">Name</p>
       </div>
-      <div className="flex w-[90%]">
-        <span>For the month of</span>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span className="flex-1 border-black border-b-[1px]">
-          {monthsName[month].name}
-        </span>
+      <div className="flex flex-col gap-1 mb-2 text-[11px]">
+        <div className="flex w-[90%]">
+          <span>For the month of</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <span className="flex-1 border-gray-300 border-b-[1px] pl-1">
+            {monthsName[month].name} {year}
+          </span>
+        </div>
+        <div className="flex w-[90%]">
+          <span>Office of hours arrival</span>&nbsp;&nbsp;&nbsp;
+          <span className="flex-1 border-gray-300 border-b-[1px] pl-1">
+            Regular days
+          </span>
+        </div>
+        <div className="flex w-[90%]">
+          <span>and departure</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <span className="flex-1 border-gray-300 border-b-[1px] pl-1"></span>
+        </div>
       </div>
-      <div className="flex w-[90%]">
-        <span>Office of hours arrival</span>&nbsp;&nbsp;&nbsp;
-        <span className="flex-1 border-black border-b-[1px]">Regular days</span>
-      </div>
-      <div className="flex w-[90%]">
-        <span>and departure</span>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span className="flex-1 border-black border-b-[1px]"></span>
-      </div>
-      {/* <div className="sub-header">
-          <div className="left">
-            <span>For the month of</span>
-            <span>Office of hours arrival</span>
-            <span>and departure</span>
-          </div>
-          <div className="right">
-            <span>{monthsName[month].name}</span>
-            <span>Regular Days</span>
-            <span>Saturdays</span>
-          </div>
-        </div> */}
       <table className="dtr-table">
         <thead>
           <tr>
@@ -89,7 +89,7 @@ export default function DtrTemplate({ data }) {
             <th>OUT</th>
             <th>IN</th>
             <th>OUT</th>
-            <th>Hours:Min</th>
+            <th>Hrs:Min</th>
           </tr>
         </thead>
         <tbody>
@@ -99,7 +99,7 @@ export default function DtrTemplate({ data }) {
               <tr key={index}>
                 <td>{`${date.getDate()}`}</td>
                 {dayName === "Sat" || dayName === "Sun" ? (
-                  <td colSpan={6} style={{ fontStyle: "italic" }}>
+                  <td colSpan={6} className="text-red-600 font-semibold">
                     {dayName === "Sat" ? "Saturday" : "Sunday"}
                   </td>
                 ) : (
@@ -126,11 +126,11 @@ export default function DtrTemplate({ data }) {
           </tr>
         </tbody>
       </table>
-      <div className="bottom">
+      <div className="bottom text-[11px]">
         <p>
-          <span>I CERTIFY </span>on my honor that the above is true and correct
-          report of the hours of work performed, record of which was made daily
-          at the time of arrival and departure from office.
+          <strong>I CERTIFY</strong> on my honor that the above is true and
+          correct report of the hours of work performed, record of which was
+          made daily at the time of arrival and departure from office.
         </p>
         <div className="bottom2">
           <p>Employee Signature</p>
