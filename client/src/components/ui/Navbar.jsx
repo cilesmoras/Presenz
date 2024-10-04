@@ -1,14 +1,14 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import presenzIcon from "../../assets/presenz.ico";
 
 const navigation = [
   // { name: "Dashboard", href: "/dashboard", current: true },
   { name: "Employees", href: "/employees", current: true },
   { name: "Upload logs", href: "/attendance-logs", current: false },
-  // { name: "Settings", href: "/holidays", current: false },
+  { name: "Settings", href: "/holidays", current: false },
 ];
 
 function classNames(...classes) {
@@ -149,15 +149,15 @@ export function Navbar() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
+                          <Link
+                            to="/"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
                             Sign out
-                          </a>
+                          </Link>
                         )}
                       </Menu.Item>
                     </Menu.Items>

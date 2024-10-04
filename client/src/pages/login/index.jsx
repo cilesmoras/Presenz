@@ -1,6 +1,6 @@
 import { useState } from "react";
-import hsacLogo from "../../assets/HSAC-Icon.png";
 import { useNavigate } from "react-router-dom";
+import hsacLogo from "../../assets/HSAC-Icon.png";
 import { login } from "./LoginServices";
 export default function Login() {
   const navigate = useNavigate();
@@ -21,21 +21,13 @@ export default function Login() {
       setErr(error.response.data);
     }
 
-    navigate("/dashboard");
+    navigate("/employees");
   };
   const handleInput = (e) => {
     setLoginDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div className="flex h-screen">
         <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
@@ -86,23 +78,6 @@ export default function Login() {
                         onChange={handleInput}
                         className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        htmlFor="remember-me"
-                        className="ml-2 block text-sm text-gray-900"
-                      >
-                        Remember me
-                      </label>
                     </div>
                   </div>
 
