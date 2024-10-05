@@ -35,3 +35,12 @@ export async function updateHoliday(data, id) {
     return error.response.data;
   }
 }
+
+export async function deleteHoliday(id) {
+  try {
+    const response = await Db.delete(`/holidays/${id}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
