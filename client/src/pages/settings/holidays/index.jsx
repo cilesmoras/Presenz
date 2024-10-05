@@ -1,5 +1,6 @@
 import React from "react";
 import CardHeadings from "../../../components/CardHeadings";
+import HolidaysTable from "./HolidaysTable";
 
 export default function Holidays() {
   return (
@@ -10,12 +11,7 @@ export default function Holidays() {
         redirectTo="/holidays/create"
       />
       <div className="bg-white rounded-md">
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil
-          reiciendis aperiam placeat molestias rem amet! Laudantium, voluptates
-          ea possimus cum similique ad laborum blanditiis, atque asperiores
-          tempora quam maiores repellendus.
-        </p>
+        <HolidaysTable />
       </div>
     </>
   );
