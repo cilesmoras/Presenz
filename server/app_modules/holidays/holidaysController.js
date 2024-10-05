@@ -42,7 +42,7 @@ function createHoliday(req, res) {
   ];
 
   const query = `INSERT INTO ${tableName} (name, holiday_start, holiday_end, created_by) VALUES (?)`;
-  db.query(query, [values], (err, res) => {
+  db.query(query, [values], (err, result) => {
     if (err) {
       console.log(err);
       return res

@@ -10,9 +10,11 @@ import Register from "./pages/login/Register";
 import Settings from "./pages/settings";
 import BreakTime from "./pages/settings/break-time/index";
 import Departments from "./pages/settings/departments";
+import HolidaysForm from "./pages/settings/holidays/HolidaysForm";
 import Holidays from "./pages/settings/holidays/index";
 import JobTitles from "./pages/settings/job-titles/index";
 import ShiftSchedules from "./pages/settings/shift-schedules/index";
+
 export default function App() {
   return (
     <Routes>
@@ -28,7 +30,10 @@ export default function App() {
         </Route>
         <Route path="/attendance-logs" element={<AttendanceLogs />} />
         <Route element={<Settings />}>
-          <Route path="/holidays" element={<Holidays />} />
+          <Route path="/holidays">
+            <Route index element={<Holidays />} />
+            <Route path="create" element={<HolidaysForm />} />
+          </Route>
           <Route path="/break-time" element={<BreakTime />} />
           <Route path="/job-titles" element={<JobTitles />} />
           <Route path="/departments" element={<Departments />} />
