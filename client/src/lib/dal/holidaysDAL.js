@@ -5,7 +5,16 @@ export async function fetchHolidays() {
     const response = await Db.get("/holidays");
     return response.data;
   } catch (error) {
-    return error.response.data.message;
+    return error.response.data;
+  }
+}
+
+export async function fetchHolidaysById(id) {
+  try {
+    const response = await Db.get(`/holidays/${id}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
 }
 
@@ -23,6 +32,6 @@ export async function updateHoliday(data, id) {
     const response = await Db.put(`/holidays/${id}`, data);
     return response.data;
   } catch (error) {
-    return error.response.data.message;
+    return error.response.data;
   }
 }

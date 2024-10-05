@@ -1,4 +1,6 @@
+import dayjs from "dayjs";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import { fetchHolidays } from "../../../lib/dal/holidaysDAL";
 
 const people = [
@@ -53,18 +55,18 @@ export default function HolidaysTable() {
                     {holiday.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {holiday.holiday_start}
+                    {dayjs(holiday.holiday_start).format("MMMM DD, YYYY")}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {holiday.holiday_end}
+                    {dayjs(holiday.holiday_end).format("MMMM DD, YYYY")}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex gap-2 justify-end">
-                    <a
-                      href="#"
+                    <Link
+                      to={`/holidays/${holiday.id}/edit`}
                       className="text-indigo-600 hover:text-indigo-900"
                     >
                       Edit<span className="sr-only">, {holiday.name}</span>
-                    </a>
+                    </Link>
                     <span
                       href="#"
                       className="text-indigo-600 hover:text-indigo-900 cursor-pointer"

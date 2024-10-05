@@ -1,18 +1,28 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import { Input } from "../../../components/inputs";
 import { Button } from "../../../components/ui";
 import { useNotificationContext } from "../../../context/NotificationContext";
-import { insertHoliday, updateHoliday } from "../../../lib/dal/holidaysDAL";
+import {
+  fetchHolidaysById,
+  insertHoliday,
+  updateHoliday,
+} from "../../../lib/dal/holidaysDAL";
 
 export default function HolidaysForm() {
   const { id } = useParams();
   const isAddMode = !id;
+  const navigate = useNavigate();
   const { handleNotification } = useNotificationContext();
+  const { data: holidayData, isLoading: isLoadingHoliday } = useQuery(
+    ["holidays", id],
+    () => fetchHolidaysById(id)
+  );
 
   const schema = z.object({
     name: z.string().trim().min(1, { message: "Please enter a name." }),
@@ -33,6 +43,15 @@ export default function HolidaysForm() {
       holidayEnd: "",
     },
   });
+
+  useEffect(() => {
+    if (isLoadingHoliday) return;
+    reset({
+      name: holidayData.name ?? "",
+      holidayStart: holidayData.holiday_start ?? "",
+      holidayEnd: holidayData.holiday_end ?? "",
+    });
+  }, [holidayData, isLoadingHoliday]);
 
   async function onSubmit(data) {
     const { name, holidayStart, holidayEnd } = data;

@@ -33,6 +33,7 @@ export default function App() {
           <Route path="/holidays">
             <Route index element={<Holidays />} />
             <Route path="create" element={<HolidaysForm />} />
+            <Route path=":id/edit" element={<HolidaysForm />} />
           </Route>
           <Route path="/break-time" element={<BreakTime />} />
           <Route path="/job-titles" element={<JobTitles />} />
