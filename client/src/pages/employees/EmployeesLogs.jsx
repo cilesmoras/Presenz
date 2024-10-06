@@ -2,11 +2,13 @@ import dayjs from "dayjs";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
+import { useSearchParams } from "react-router-dom";
 import { fetchLogs } from "../../components/print/DtrServices";
 import Print from "../../components/print/Print";
 import Drawer from "../../components/ui/Drawer";
 import { useNotificationContext } from "../../context/NotificationContext";
 import { deleteAttendanceLog } from "../../lib/dal/attendanceLogsDAL";
+import { fetchHolidaysByYear } from "../../lib/dal/holidaysDAL";
 import { getDayName, getDaysInMonth } from "../../utils/";
 import { getLogsOfDay } from "../../utils/LogMgr";
 import { Input, Select } from "./../../components/inputs/";
@@ -19,15 +21,16 @@ const printOption = [
   { id: 3, name: "Second Half" },
 ];
 
-export default function EmployeesLogs({ employee, idNumber }) {
+export default function EmployeesLogs({ employee }) {
   const queryClient = useQueryClient();
   const { handleNotification } = useNotificationContext();
+  const [searchParams, setSearchParams] = useSearchParams();
   const defaultMonth = new Date().getMonth();
   const defaultYear = new Date().getFullYear();
-  const [month, setMonth] = useState(defaultMonth);
-  const [year, setYear] = useState(defaultYear);
+  const year = searchParams.get("year") ?? defaultYear;
+  const month = searchParams.get("month") ?? defaultMonth;
+  const dateToPrint = searchParams.get("dateToPrintear") ?? printOption[0].id;
   const [datesInMonth, setDatesInMonth] = useState([]);
-  const [dateToPrint, setDateToPrint] = useState(1);
   const selectedDate = new Date(year, month, 1);
   const [empLogs, setEmplogs] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -46,6 +49,25 @@ export default function EmployeesLogs({ employee, idNumber }) {
         dayjs(selectedDate).format("YYYY-MM")
       )
   );
+  const { data: holidaysData, isLoading: isLoadingHolidays } = useQuery(
+    ["holidays", year],
+    () => fetchHolidaysByYear(year)
+  );
+
+  function setFilters(filters) {
+    setSearchParams((params) => {
+      filters.year && params.set("year", filters.year);
+      filters.month && params.set("month", filters.month);
+      return params;
+    });
+  }
+
+  function findHolidayByDate(holidays, date) {
+    const result = holidays?.find(
+      (holiday) => date >= holiday.holiday_start && date <= holiday.holiday_end
+    );
+    return result ? result : null;
+  }
 
   function handleChangeMonth(e) {
     setMonth(e.target.value);
@@ -137,6 +159,8 @@ export default function EmployeesLogs({ employee, idNumber }) {
     </>
   );
 
+  if (employeeLogs.isLoading || isLoadingHolidays) return <p>Loading...</p>;
+
   return (
     <>
       <div
@@ -145,17 +169,22 @@ export default function EmployeesLogs({ employee, idNumber }) {
       >
         <Input
           type="number"
-          onChange={handleChangeYear}
-          defaultValue={defaultYear}
+          onChange={(e) => setFilters({ year: e.target.value })}
+          defaultValue={year}
         />
         <Select
           options={months}
-          onChange={handleChangeMonth}
-          defaultValue={defaultMonth}
+          onChange={(e) => setFilters({ month: e.target.value })}
+          defaultValue={month}
         />
-        <Select options={printOption} onChange={handleDayToPrint} />
+        <Select
+          options={printOption}
+          defaultValue={dateToPrint}
+          onChange={(e) => setFilters({ dateToPrint: e.target.value })}
+        />
         <Print
           empLogs={empLogs}
+          holidays={holidaysData}
           datesInMonth={datesInMonth}
           employee_id={employee.id_number}
           year={year}
@@ -206,47 +235,47 @@ export default function EmployeesLogs({ employee, idNumber }) {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {datesInMonth.map((date, index) => {
                     const dayName = getDayName(date.getDay(), true);
+                    const isSaturday = dayName === "Sat";
+                    const isSunday = dayName === "Sun";
+                    const isWeekend = isSaturday || isSunday;
+                    const isWeekday = !isSaturday && !isSunday;
+                    const foundHoliday = findHolidayByDate(
+                      holidaysData,
+                      moment(date).format("YYYY-MM-DD")
+                    );
+
                     return (
                       <tr
                         key={index}
-                        className={`${
-                          dayName === "Sat" || dayName === "Sun"
-                            ? "bg-gray-100"
-                            : ""
-                        } `}
+                        className={`${isWeekend ? "bg-gray-100" : ""} `}
                       >
-                        <td
-                          colSpan={`${
-                            dayName === "Sat" || dayName === "Sun" ? "7" : "1"
-                          }`}
-                          className="whitespace-nowrap py-2 pl-2  text-left  text-sm text-gray-500 "
-                        >
+                        <td className="whitespace-nowrap py-2 pl-2 text-left text-sm text-gray-500 ">
                           {`${date.getDate()} - ${dayName}`}
                         </td>
+                        {foundHoliday && isWeekday && (
+                          <td
+                            colSpan="6"
+                            className="whitespace-nowrap py-2 pl-2 text-center text-sm text-red-500 font-semibold"
+                          >
+                            {foundHoliday?.name}
+                          </td>
+                        )}
 
-                        {dayName === "Sat" || dayName === "Sun"
-                          ? ""
-                          : empLogs &&
-                            getLogsOfDay(
-                              empLogs,
-                              moment(
-                                `${year}-${Number(month) + 1}-${date.getDate()}`
-                              ).format("YYYY-MM-DD")
-                            ).map((item, i) => (
-                              <td
-                                key={i}
-                                className="hidden lg:table-cell whitespace-nowrap text-center text-sm text-gray-900"
-                              >
-                                {item ? item : ""}
-                              </td>
-                            ))}
-
-                        <td className="hidden lg:table-cell whitespace-nowrap text-center text-sm text-gray-900"></td>
-                        <td className="hidden lg:table-cell whitespace-nowrap text-center text-sm text-gray-900"></td>
+                        {isWeekend ? (
+                          <td colSpan="6"></td>
+                        ) : (
+                          !foundHoliday &&
+                          getLogsOfDay(empLogs, date).map((item, i) => (
+                            <td
+                              key={i}
+                              className="table-cell whitespace-nowrap text-center text-sm text-gray-900"
+                            >
+                              {item ? item : ""}
+                            </td>
+                          ))
+                        )}
                         <td className="whitespace-nowrap py-2 pl-3  text-right text-sm font-medium ">
-                          {dayName === "Sat" || dayName === "Sun" ? (
-                            ""
-                          ) : (
+                          {isWeekday && !foundHoliday && (
                             <span
                               className="text-indigo-600 hover:text-indigo-900 pr-6 cursor-pointer"
                               onClick={() => handleClickViewLogs(date)}

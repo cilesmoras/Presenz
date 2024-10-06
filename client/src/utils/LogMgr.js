@@ -131,7 +131,7 @@ export const getLogsOfDay = (logs, date) => {
     morningOut ? moment(morningOut).format("hh:mm") : "",
     afternoonIn ? moment(afternoonIn).format("hh:mm") : "",
     afternoonOut ? moment(afternoonOut).format("hh:mm") : "",
-    totalUndertime,
-    totalHoursWork,
+    totalUndertime ?? "",
+    totalHoursWork ?? "",
   ];
 };

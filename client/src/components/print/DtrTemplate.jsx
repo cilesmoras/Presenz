@@ -17,6 +17,7 @@ export default function DtrTemplate({ data }) {
   const employee_id = data.employee_id;
   const year = data.year;
   const month = data.month;
+  const holidays = data.holidays;
   const [employeeDetails, setEmployeeDetails] = useState();
 
   useEffect(() => {
@@ -26,6 +27,13 @@ export default function DtrTemplate({ data }) {
     };
     fetchEmployee();
   }, []);
+
+  function findHolidayByDate(date) {
+    const result = holidays?.find(
+      (holiday) => date >= holiday.holiday_start && date <= holiday.holiday_end
+    );
+    return result ? result : null;
+  }
 
   return (
     // <div className="dtr-container">
@@ -95,25 +103,31 @@ export default function DtrTemplate({ data }) {
         <tbody>
           {datesInMonth.map((date, index) => {
             const dayName = getDayName(date.getDay(), true);
+            const isSaturday = dayName === "Sat";
+            const isSunday = dayName === "Sun";
+            const isWeekend = isSaturday || isSunday;
+            const isWeekday = !isSaturday && !isSunday;
+            const foundHoliday = findHolidayByDate(
+              moment(date).format("YYYY-MM-DD")
+            );
+
             return (
               <tr key={index}>
                 <td>{`${date.getDate()}`}</td>
-                {dayName === "Sat" || dayName === "Sun" ? (
-                  <td colSpan={6} className="text-red-600 font-semibold">
-                    {dayName === "Sat" ? "Saturday" : "Sunday"}
+                {isWeekend && (
+                  <td colSpan={6} className="text-gray-600">
+                    {isSaturday ? "Saturday" : "Sunday"}
+                  </td>
+                )}
+                {foundHoliday && isWeekday ? (
+                  <td colSpan={6} className="text-red-600">
+                    {foundHoliday?.name}
                   </td>
                 ) : (
-                  <>
-                    {data.empLogs &&
-                      getLogsOfDay(
-                        data.empLogs,
-                        moment(
-                          `${year}-${Number(month) + 1}-${date.getDate()}`
-                        ).format("YYYY-MM-DD")
-                      )
-                        .slice(0, 5)
-                        .map((log, i) => <td key={i}>{log}</td>)}
-                  </>
+                  isWeekday &&
+                  getLogsOfDay(data.empLogs, date)
+                    .slice(0, 5)
+                    .map((log, i) => <td key={i}>{log}</td>)
                 )}
               </tr>
             );

@@ -9,7 +9,6 @@ import EmployeesTable from "./EmployeesTable";
 export default function Employees() {
   const { data, isLoading } = useQuery(["employees"], fetchEmployees);
   const [employees, setEmployees] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(null);
 
   useEffect(() => {
     if (isLoading) return;

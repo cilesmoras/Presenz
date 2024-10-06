@@ -69,8 +69,8 @@ function fetchByYear(req, res) {
   });
 }
 
-function fetchDistinctYears(req, res) {
-  const query = `SELECT DISTINCT(YEAR(holiday_start)) year, id FROM ${tableName}`;
+function fetchGroupByYear(req, res) {
+  const query = `SELECT YEAR(holiday_start) year, id FROM ${tableName} GROUP BY year`;
   db.query(query, (err, result) => {
     if (err) {
       console.log(err);
@@ -155,7 +155,7 @@ module.exports = {
   fetchById,
   fetchByDate,
   fetchByYear,
-  fetchDistinctYears,
+  fetchGroupByYear,
   createHoliday,
   updateHoliday,
   deleteHoliday,

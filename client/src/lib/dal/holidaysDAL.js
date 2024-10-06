@@ -36,9 +36,9 @@ export async function fetchHolidaysByYear(year) {
   }
 }
 
-export async function fetchDHolidaysDistinctYears(year) {
+export async function fetchHolidaysGroupByYear() {
   try {
-    const response = await Db.get(`/holidays/distinct-years/a`);
+    const response = await Db.get(`/holidays/group-by-year/a`);
     return response.data;
   } catch (error) {
     return error.response.data;

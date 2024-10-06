@@ -7,8 +7,8 @@ import DeleteModal from "../../../components/ui/DeleteModal";
 import { useNotificationContext } from "../../../context/NotificationContext";
 import {
   deleteHoliday,
-  fetchDHolidaysDistinctYears,
   fetchHolidaysByYear,
+  fetchHolidaysGroupByYear,
 } from "../../../lib/dal/holidaysDAL";
 
 export default function HolidaysTable() {
@@ -27,10 +27,7 @@ export default function HolidaysTable() {
     () => fetchHolidaysByYear(queryYear)
   );
 
-  const distinctYears = useQuery(
-    ["holidays-years"],
-    fetchDHolidaysDistinctYears
-  );
+  const distinctYears = useQuery(["holidays-years"], fetchHolidaysGroupByYear);
 
   useEffect(() => {
     if (queryYear || distinctYears.isLoading) return;
