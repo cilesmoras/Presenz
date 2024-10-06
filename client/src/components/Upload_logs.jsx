@@ -1,5 +1,5 @@
 import { DocumentIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNotificationContext } from "../context/NotificationContext";
 import { insertBatchAttendanceLog } from "../lib/dal/attendanceLogsDAL";
 import SpinnerIcon from "./ui/SpinnerIcon";
@@ -87,10 +87,6 @@ const Upload_logs = () => {
 
     e.target.value = null;
   };
-
-  useEffect(() => {
-    console.log("logs", logs);
-  }, [logs]);
 
   const punchType = (e) => {
     switch (e) {

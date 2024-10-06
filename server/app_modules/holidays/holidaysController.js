@@ -33,6 +33,59 @@ function fetchById(req, res) {
   });
 }
 
+function fetchByDate(req, res) {
+  const { date } = req.params;
+  const query = `SELECT * FROM ${tableName} WHERE ? BETWEEN holiday_start and holiday_end`;
+  db.query(query, date, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500);
+    }
+    if (!result) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
+    }
+
+    res.send(result[0]);
+  });
+}
+
+function fetchByYear(req, res) {
+  const { year } = req.params;
+  const query = `SELECT * FROM ${tableName} WHERE YEAR(holiday_start) = ?`;
+  db.query(query, year, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500);
+    }
+    if (!result) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
+    }
+
+    res.send(result);
+  });
+}
+
+function fetchDistinctYears(req, res) {
+  const query = `SELECT DISTINCT(YEAR(holiday_start)) year, id FROM ${tableName}`;
+  db.query(query, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500);
+    }
+    if (!result) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
+    }
+
+    res.send(result);
+  });
+}
+
 function createHoliday(req, res) {
   const values = [
     req.body.name,
@@ -100,6 +153,9 @@ function deleteHoliday(req, res) {
 module.exports = {
   fetchAll,
   fetchById,
+  fetchByDate,
+  fetchByYear,
+  fetchDistinctYears,
   createHoliday,
   updateHoliday,
   deleteHoliday,

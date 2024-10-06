@@ -18,6 +18,33 @@ export async function fetchHolidaysById(id) {
   }
 }
 
+export async function fetchHolidaysByDate(date) {
+  try {
+    const response = await Db.get(`/holidays/${date}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function fetchHolidaysByYear(year) {
+  try {
+    const response = await Db.get(`/holidays/fetch-by-year/${year}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function fetchDHolidaysDistinctYears(year) {
+  try {
+    const response = await Db.get(`/holidays/distinct-years/a`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
 export async function insertHoliday(data) {
   try {
     const response = await Db.post("/holidays", data);

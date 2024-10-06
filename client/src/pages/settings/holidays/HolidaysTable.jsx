@@ -1,30 +1,51 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Select } from "../../../components/inputs";
 import DeleteModal from "../../../components/ui/DeleteModal";
 import { useNotificationContext } from "../../../context/NotificationContext";
-import { deleteHoliday, fetchHolidays } from "../../../lib/dal/holidaysDAL";
-
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  // More people...
-];
+import {
+  deleteHoliday,
+  fetchDHolidaysDistinctYears,
+  fetchHolidaysByYear,
+} from "../../../lib/dal/holidaysDAL";
 
 export default function HolidaysTable() {
   const queryClient = useQueryClient();
-  const { data: holidays, isLoading } = useQuery(["holidays"], fetchHolidays);
+  const navigate = useNavigate();
+  const [yearParams, setYearParams] = useSearchParams();
+  const queryYear = yearParams.get("year");
   const [selectedDeleteHoliday, setSelectedDeletedHoliday] = useState();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { handleNotification } = useNotificationContext();
+  const [years, setYears] = useState([]);
 
-  if (isLoading) return <p>Loading data...</p>;
+  const { data: holidays, isLoading: isLoadingHolidays } = useQuery(
+    ["holidays", queryYear],
+    () => fetchHolidaysByYear(queryYear)
+  );
+
+  const distinctYears = useQuery(
+    ["holidays-years"],
+    fetchDHolidaysDistinctYears
+  );
+
+  useEffect(() => {
+    if (queryYear || distinctYears.isLoading) return;
+    navigate(`/holidays?year=${distinctYears.data[0].year}`);
+  }, [distinctYears.data]);
+
+  useEffect(() => {
+    if (distinctYears.isLoading) return;
+    const result = distinctYears.data.map((a) => ({
+      id: a.year,
+      name: a.year,
+    }));
+
+    setYears(result);
+  }, [distinctYears.data, distinctYears.isLoading]);
 
   function handleSelectedHolidayDelete(data) {
     setSelectedDeletedHoliday(data);
@@ -52,11 +73,21 @@ export default function HolidaysTable() {
     }
   }
 
+  if (!queryYear || isLoadingHolidays || distinctYears.isLoading)
+    return <p>Loading data...</p>;
+
   return (
     <>
       <div className="mt-4 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+            <div className="flex mb-4">
+              <Select
+                options={years}
+                value={queryYear}
+                onChange={(e) => setYearParams({ year: e.target.value })}
+              />
+            </div>
             <table className="min-w-full divide-y divide-gray-300">
               <thead>
                 <tr>
@@ -84,7 +115,7 @@ export default function HolidaysTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {holidays.map((holiday) => (
+                {holidays?.map((holiday) => (
                   <tr key={holiday.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                       {holiday.name}
