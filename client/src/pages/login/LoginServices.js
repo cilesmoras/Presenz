@@ -6,6 +6,11 @@ export const createUser = async (userDetails) => {
 };
 
 export const login = async (loginDetails) => {
-  const response = await Db.post("/auth/login", loginDetails);
-  return response;
+  try {
+    const response = await Db.post("/auth/login", loginDetails);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return error.response.data;
+  }
 };

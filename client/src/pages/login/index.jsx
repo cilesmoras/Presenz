@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hsacLogo from "../../assets/HSAC-Icon.png";
 import { login } from "./LoginServices";
+
 export default function Login() {
   const navigate = useNavigate();
   const [err, setErr] = useState();
@@ -11,21 +12,31 @@ export default function Login() {
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (loginDetails.username == "" || loginDetails.password == "") {
-      return setErr("All fields must not empty!");
+      return setErr("Please fill up all the fields.");
     }
     try {
-      let res = await login(loginDetails);
-      console.log(res);
-    } catch (error) {
-      setErr(error.response.data);
-    }
+      const result = await login(loginDetails);
+      console.log(result);
+      if (!result.success) {
+        setErr(result.message);
+        return;
+      }
 
-    navigate("/employees");
+      localStorage.setItem("auth", JSON.stringify(result.data));
+      navigate("/employees");
+    } catch (error) {
+      console.log("client error", error);
+      setErr(error.response.data);
+      return;
+    }
   };
+
   const handleInput = (e) => {
     setLoginDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
   return (
     <>
       <div className="flex h-screen">
@@ -100,7 +111,7 @@ export default function Login() {
                     justifyContent: "center",
                   }}
                 >
-                  {err && <p style={{ color: "red" }}>{err}</p>}
+                  {err && <p className="text-red-600 text-sm">{err}</p>}
                 </div>
               </div>
             </div>

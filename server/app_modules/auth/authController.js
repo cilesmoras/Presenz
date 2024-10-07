@@ -33,22 +33,34 @@ const register = (request, response) => {
 const login = (request, response) => {
   const q = "SELECT * FROM users WHERE username = ?";
   db.query(q, [request.body.username], (err, data) => {
-    if (err) return response.send(err);
+    if (err) {
+      console.error(err);
+      return response
+        .statu(500)
+        .json({ success: false, message: "Internal server error." });
+    }
+
     if (data.length === 0)
-      return response.status(404).send("Invalid Username!");
+      return response
+        .status(404)
+        .json({ success: false, message: "Username does not exist." });
 
     const checkPassword = bcrypt.compareSync(
       request.body.password,
       data[0].password
     );
-    if (!checkPassword) return response.status(400).send("Incorrect Password");
+
+    if (!checkPassword)
+      return response
+        .status(400)
+        .json({ success: false, message: "Incorrect password." });
 
     const token = jwt.sign({ id: data[0].id }, "jwtsecretkey");
     const { password, ...other } = data[0];
     response
       .cookie("access_token", token, { httpOnly: true })
       .status(200)
-      .json(other);
+      .json({ success: true, data: other });
   });
 };
 
