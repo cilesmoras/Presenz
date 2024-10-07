@@ -18,10 +18,10 @@ export default function Settings() {
 
 const navigation = [
   { name: "Holidays", href: "/holidays", current: true },
-  { name: "Break time", href: "/break-time", current: false },
+  // { name: "Break time", href: "/break-time", current: false },
   { name: "Job titles", href: "/job-titles", current: false },
   { name: "Departments", href: "/departments", current: false },
-  { name: "Shift schedules", href: "/shift-schedules", current: false },
+  // { name: "Shift schedules", href: "/shift-schedules", current: false },
   // { name: "Documents", href: "#", current: false },
   // { name: "Reports", href: "#", current: false },
 ];
