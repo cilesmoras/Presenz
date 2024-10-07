@@ -6,4 +6,5 @@ router.get("/", controller.fetchAll);
 router.get("/:id", controller.fetchById);
 router.post("/", controller.createJobtitle);
 router.patch("/:id", controller.updateJobtitle);
+router.delete("/:id", controller.deleteJobTitle);
 module.exports = router;

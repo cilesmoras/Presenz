@@ -13,6 +13,7 @@ import Departments from "./pages/settings/departments";
 import HolidaysForm from "./pages/settings/holidays/HolidaysForm";
 import Holidays from "./pages/settings/holidays/index";
 import JobTitles from "./pages/settings/job-titles/index";
+import JobTitlesForm from "./pages/settings/job-titles/JobTitlesForm";
 import ShiftSchedules from "./pages/settings/shift-schedules/index";
 
 export default function App() {
@@ -36,7 +37,11 @@ export default function App() {
             <Route path=":id/edit" element={<HolidaysForm />} />
           </Route>
           <Route path="/break-time" element={<BreakTime />} />
-          <Route path="/job-titles" element={<JobTitles />} />
+          <Route path="/job-titles">
+            <Route index element={<JobTitles />} />
+            <Route path="create" element={<JobTitlesForm />} />
+            <Route path=":id/edit" element={<JobTitlesForm />} />
+          </Route>
           <Route path="/departments" element={<Departments />} />
           <Route path="/shift-schedules" element={<ShiftSchedules />} />
         </Route>

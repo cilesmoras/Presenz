@@ -59,8 +59,26 @@ const updateJobtitle = (request, response) => {
     }
 
     response
-      .status(201)
+      .status(200)
       .json({ success: true, message: "Job title has been updated." });
+  });
+};
+
+const deleteJobTitle = (request, response) => {
+  const { id } = request.params;
+
+  const query = `DELETE FROM ${tableName} WHERE id = ?`;
+  db.query(query, id, (err, res) => {
+    if (err) {
+      console.log(err);
+      return response
+        .status(500)
+        .json({ success: false, message: "Internal server error." });
+    }
+
+    response
+      .status(201)
+      .json({ success: true, message: "Job title has been deleted." });
   });
 };
 
@@ -69,4 +87,5 @@ module.exports = {
   fetchById,
   createJobtitle,
   updateJobtitle,
+  deleteJobTitle,
 };
