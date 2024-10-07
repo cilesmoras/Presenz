@@ -1,7 +1,7 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import presenzIcon from "../../assets/presenz.ico";
 
 const navigation = [
@@ -11,14 +11,21 @@ const navigation = [
   { name: "Settings", href: "/holidays", current: false },
 ];
 
+const normalLink = "text-gray-300 hover:bg-gray-700 hover:text-white";
+const activeLink = "bg-gray-900 text-white";
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const normalLink = "text-gray-300 hover:bg-gray-700 hover:text-white";
-const activeLink = "bg-gray-900 text-white";
-
 export function Navbar() {
+  const navigate = useNavigate();
+
+  function signOut() {
+    localStorage.removeItem("auth");
+    navigate("/");
+  }
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -149,15 +156,15 @@ export function Navbar() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <Link
-                            to="/"
+                          <span
+                            onClick={signOut}
                             className={classNames(
                               active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
+                              "block px-4 py-2 text-sm text-gray-700 cursor-pointer"
                             )}
                           >
                             Sign out
-                          </Link>
+                          </span>
                         )}
                       </Menu.Item>
                     </Menu.Items>

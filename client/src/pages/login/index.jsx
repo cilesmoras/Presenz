@@ -18,7 +18,6 @@ export default function Login() {
     }
     try {
       const result = await login(loginDetails);
-      console.log(result);
       if (!result.success) {
         setErr(result.message);
         return;
