@@ -29,7 +29,7 @@ export default function EmployeesLogs({ employee }) {
   const defaultYear = new Date().getFullYear();
   const year = searchParams.get("year") ?? defaultYear;
   const month = searchParams.get("month") ?? defaultMonth;
-  const dateToPrint = searchParams.get("dateToPrintear") ?? printOption[0].id;
+  const dateToPrint = searchParams.get("dateToPrint") ?? printOption[0].id;
   const [datesInMonth, setDatesInMonth] = useState([]);
   const selectedDate = new Date(year, month, 1);
   const [empLogs, setEmplogs] = useState([]);
@@ -58,6 +58,7 @@ export default function EmployeesLogs({ employee }) {
     setSearchParams((params) => {
       filters.year && params.set("year", filters.year);
       filters.month && params.set("month", filters.month);
+      filters.dateToPrint && params.set("dateToPrint", filters.dateToPrint);
       return params;
     });
   }
