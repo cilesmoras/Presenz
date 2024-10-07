@@ -20,8 +20,10 @@ export default function Employees() {
       setEmployees(data);
     }
     const employeesCopy = data;
-    const found = employeesCopy.filter((emp) =>
-      emp.first_name.toString().toLowerCase().includes(query.toLowerCase())
+    const found = employeesCopy.filter(
+      (emp) =>
+        emp.first_name.toString().toLowerCase().includes(query.toLowerCase()) ||
+        emp.last_name.toString().toLowerCase().includes(query.toLowerCase())
     );
     setEmployees(found);
   }
