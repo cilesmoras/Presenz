@@ -34,11 +34,10 @@ export default function DtrTemplate({ data }) {
     );
     return result ? result : null;
   }
-
   return (
     // <div className="dtr-container">
-    <div className="m-3 px-4">
-      <p className="text-[11px]">CSC FORM NO. 48</p>
+    <div className="px-4">
+      <p className="text-[10px]">CSC FORM NO. 48</p>
       <div className="logo-container">
         <div className="logo">
           <img src={logo} alt="" />
@@ -46,13 +45,13 @@ export default function DtrTemplate({ data }) {
         <div className="header-text">
           <label>Republic of the Philippines</label>
           <br />
-          <label>HUMAN SETTLEMENTS ADJUDICATION COMMISSION</label>
+          <label className="">HUMAN SETTLEMENTS ADJUDICATION COMMISSION</label>
           <br />
           <label>Regional Adjudication Branch 9</label>
         </div>
       </div>
-      <div className="flex flex-col justify-center">
-        <h1 className="text-sm leading-6 text-center my-2">
+      <div className="flex flex-col justify-center w-[80%] mx-auto">
+        <h1 className="text-sm leading-6 text-center my-1">
           DAILY TIME RECORD
         </h1>
         <h2 className="font-bold text-[12px] uppercase mx-4 border-gray-300 border-b-[1px] text-center">
@@ -62,9 +61,9 @@ export default function DtrTemplate({ data }) {
               } ${employeeDetails.last_name}`
             : ""}
         </h2>
-        <p className="text-center text-xs mb-2">Name</p>
+        <p className="text-center text-xs mb-1">Name</p>
       </div>
-      <div className="flex flex-col gap-1 mb-2 text-[11px]">
+      <div className="flex flex-col gap-1 mb-1 text-[11px]">
         <div className="flex w-[90%]">
           <span>For the month of</span>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -6,7 +6,7 @@ const ComponentToPrint = forwardRef((props, ref) => {
   // console.log("props", props);
   return (
     // <div ref={ref} className="dtr-main-container">
-    <div ref={ref} className="flex mx-auto">
+    <div ref={ref} className="flex gap-6 mx-auto">
       <DtrTemplate data={props} />
       <DtrTemplate data={props} />
     </div>
