@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Select } from "../../../components/inputs";
+import { Input } from "../../../components/inputs";
 import DeleteModal from "../../../components/ui/DeleteModal";
 import { useNotificationContext } from "../../../context/NotificationContext";
 import {
@@ -15,7 +15,8 @@ export default function HolidaysTable() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [yearParams, setYearParams] = useSearchParams();
-  const queryYear = yearParams.get("year");
+  const defaultYear = new Date().getFullYear();
+  const queryYear = yearParams.get("year") ?? defaultYear;
   const [selectedDeleteHoliday, setSelectedDeletedHoliday] = useState();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -79,10 +80,10 @@ export default function HolidaysTable() {
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="flex mb-4">
-              <Select
-                options={years}
-                value={queryYear}
+              <Input
+                type="number"
                 onChange={(e) => setYearParams({ year: e.target.value })}
+                defaultValue={queryYear}
               />
             </div>
             <table className="min-w-full divide-y divide-gray-300">

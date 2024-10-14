@@ -70,7 +70,7 @@ function fetchByYear(req, res) {
 }
 
 function fetchGroupByYear(req, res) {
-  const query = `SELECT YEAR(holiday_start) year, id FROM ${tableName} GROUP BY year`;
+  const query = `SELECT YEAR(holiday_start) year FROM ${tableName} GROUP BY year`;
   db.query(query, (err, result) => {
     if (err) {
       console.log(err);

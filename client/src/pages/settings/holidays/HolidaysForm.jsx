@@ -116,9 +116,7 @@ export default function HolidaysForm() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() =>
-              navigate(isAddMode ? `/employees/` : `/employees/${idNumber}`)
-            }
+            onClick={() => navigate("/holidays")}
           >
             Cancel
           </Button>
