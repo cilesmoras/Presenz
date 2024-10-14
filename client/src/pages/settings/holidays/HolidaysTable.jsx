@@ -8,7 +8,6 @@ import { useNotificationContext } from "../../../context/NotificationContext";
 import {
   deleteHoliday,
   fetchHolidaysByYear,
-  fetchHolidaysGroupByYear,
 } from "../../../lib/dal/holidaysDAL";
 
 export default function HolidaysTable() {
@@ -28,22 +27,9 @@ export default function HolidaysTable() {
     () => fetchHolidaysByYear(queryYear)
   );
 
-  const distinctYears = useQuery(["holidays-years"], fetchHolidaysGroupByYear);
-
   useEffect(() => {
-    if (queryYear || distinctYears.isLoading) return;
-    navigate(`/holidays?year=${distinctYears.data[0].year}`);
-  }, [distinctYears.data]);
-
-  useEffect(() => {
-    if (distinctYears.isLoading) return;
-    const result = distinctYears.data.map((a) => ({
-      id: a.year,
-      name: a.year,
-    }));
-
-    setYears(result);
-  }, [distinctYears.data, distinctYears.isLoading]);
+    navigate(`/holidays?year=${queryYear}`);
+  }, []);
 
   function handleSelectedHolidayDelete(data) {
     setSelectedDeletedHoliday(data);
@@ -71,8 +57,7 @@ export default function HolidaysTable() {
     }
   }
 
-  if (!queryYear || isLoadingHolidays || distinctYears.isLoading)
-    return <p>Loading data...</p>;
+  if (!queryYear || isLoadingHolidays) return <p>Loading data...</p>;
 
   return (
     <>
