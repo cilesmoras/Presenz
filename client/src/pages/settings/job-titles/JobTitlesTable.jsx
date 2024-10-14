@@ -61,7 +61,7 @@ export default function JobTitlesTable() {
               <tbody className="divide-y divide-gray-200">
                 {jobTitles?.map((a) => (
                   <tr key={a.id}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-0">
                       {a.title}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex gap-2 justify-end">

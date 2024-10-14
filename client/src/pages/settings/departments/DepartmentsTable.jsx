@@ -28,7 +28,7 @@ export default function DepartmentsTable() {
               <tbody className="divide-y divide-gray-200">
                 {departments?.map((dep) => (
                   <tr key={dep.id}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-0">
                       {dep.name}
                     </td>
                   </tr>
